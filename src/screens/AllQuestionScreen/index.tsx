@@ -18,7 +18,7 @@ import AppStatusBar from '../AppStatusBar';
 
 const Home = () => {
   const navigation = useNavigation();
-  const {userProfile, myRoomsData} = useSelector((state: any) => state.product);
+  const {allQuestionData} = useSelector((state: any) => state.product);
   const [fullName, setFullName] = useState<any>();
   const [phoneNumber, setPhoneNumber] = useState<any>();
 
@@ -36,154 +36,161 @@ const Home = () => {
     <>
       <AppStatusBar />
 
-      <View
-        style={{
-          flex: 1,
-          // justifyContent: 'center',
-          // alignItems: 'center',
-          backgroundColor: COLORS.white,
-        }}>
+      {allQuestionData ? (
         <View
           style={{
-            marginTop: StatusBar.currentHeight + 10,
-            justifyContent: 'center',
-            alignItems: 'center',
+            flex: 1,
+            // justifyContent: 'center',
+            // alignItems: 'center',
+            backgroundColor: COLORS.white,
           }}>
-          <Text style={{fontWeight: '700', color: COLORS.black, fontSize: 17}}>
-            Remaining Question Set (0)
-          </Text>
           <View
             style={{
-              marginHorizontal: 10,
-              width: SIZES.width * 0.95,
-              // marginTop: 5,
-              // marginBottom: 5,
-              // elevation: 3,
-              backgroundColor: COLORS.white,
-              // borderRadius: 5,
+              marginTop: StatusBar.currentHeight + 10,
+              justifyContent: 'center',
+              alignItems: 'center',
             }}>
+            <Text
+              style={{fontWeight: '700', color: COLORS.black, fontSize: 17}}>
+              Remaining Question Set (0)
+            </Text>
             <View
               style={{
-                height: 50,
-                justifyContent: 'space-between',
-                alignItems: 'center',
-                marginLeft: 10,
-                flexDirection: 'row',
-                marginHorizontal: 20,
+                marginHorizontal: 10,
+                width: SIZES.width * 0.95,
+                // marginTop: 5,
+                // marginBottom: 5,
+                // elevation: 3,
+                backgroundColor: COLORS.white,
+                // borderRadius: 5,
               }}>
-              <View style={{width: '55%', alignItems: 'center'}}>
-                <Text
-                  style={{
-                    fontWeight: '900',
-                    fontSize: 15,
-                    color: COLORS.primary,
-                    marginLeft: 10,
-                  }}>
-                  Exam Name
-                </Text>
-              </View>
+              <View
+                style={{
+                  height: 50,
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                  marginLeft: 10,
+                  flexDirection: 'row',
+                  marginHorizontal: 20,
+                }}>
+                <View style={{width: '55%', alignItems: 'center'}}>
+                  <Text
+                    style={{
+                      fontWeight: '900',
+                      fontSize: 15,
+                      color: COLORS.primary,
+                      marginLeft: 10,
+                    }}>
+                    Exam Name
+                  </Text>
+                </View>
 
-              <View style={{width: '25%', alignItems: 'center'}}>
-                <Text
-                  style={{
-                    fontSize: 14,
-                    fontWeight: '800',
-                    color: COLORS.primary,
-                  }}>
-                  Price
-                </Text>
-              </View>
-              <View style={{width: '25%', alignItems: 'center'}}>
-                <Text
-                  style={{
-                    fontWeight: '800',
-                    fontSize: 15,
-                    color: COLORS.primary,
-                    marginLeft: 10,
-                  }}>
-                  Status
-                </Text>
+                <View style={{width: '25%', alignItems: 'center'}}>
+                  <Text
+                    style={{
+                      fontSize: 14,
+                      fontWeight: '800',
+                      color: COLORS.primary,
+                    }}>
+                    Price
+                  </Text>
+                </View>
+                <View style={{width: '25%', alignItems: 'center'}}>
+                  <Text
+                    style={{
+                      fontWeight: '800',
+                      fontSize: 15,
+                      color: COLORS.primary,
+                      marginLeft: 10,
+                    }}>
+                    Status
+                  </Text>
+                </View>
               </View>
             </View>
           </View>
-        </View>
 
-        <FlatList
-          style={{marginTop: 0}}
-          data={data}
-          scrollEnabled={true}
-          showsVerticalScrollIndicator={false}
-          keyExtractor={item => `PopularCourses-${item.id}`}
-          showsHorizontalScrollIndicator={false}
-          renderItem={({item}) => {
-            return (
-              <TouchableOpacity
-                onPress={() => {
-                  console.log(item.id, '');
+          <FlatList
+            style={{marginTop: 0}}
+            data={allQuestionData}
+            scrollEnabled={true}
+            showsVerticalScrollIndicator={false}
+            keyExtractor={item => `PopularCourses-${item.id}`}
+            showsHorizontalScrollIndicator={false}
+            renderItem={({item}) => {
+              return (
+                <TouchableOpacity
+                  onPress={() => {
+                    console.log(item.id, '');
 
-                  navigation.navigate('QuestionDetailsScreen', {
-                    id: item.id,
-                  });
-                }}>
-                <View
-                  style={{
-                    marginHorizontal: 10,
-                    width: SIZES.width * 0.95,
-                    marginTop: 5,
-                    marginBottom: 5,
-                    elevation: 3,
-                    backgroundColor: COLORS.white,
-                    borderRadius: 5,
+                    navigation.navigate('QuestionDetailsScreen', {
+                      id: item.id,
+                    });
                   }}>
                   <View
                     style={{
-                      height: 70,
-                      justifyContent: 'space-between',
-                      alignItems: 'center',
-                      marginLeft: 10,
-                      flexDirection: 'row',
-                      marginHorizontal: 20,
+                      marginHorizontal: 10,
+                      width: SIZES.width * 0.95,
+                      marginTop: 5,
+                      marginBottom: 5,
+                      elevation: 3,
+                      backgroundColor: COLORS.white,
+                      borderRadius: 5,
                     }}>
-                    <View style={{width: '55%', alignItems: 'center'}}>
-                      <Text
-                        style={{
-                          fontWeight: '700',
-                          fontSize: 15,
-                          color: COLORS.black,
-                          marginLeft: 10,
-                        }}>
-                        {`${item.exam_name} `}
-                      </Text>
-                    </View>
+                    <View
+                      style={{
+                        height: 70,
+                        justifyContent: 'space-between',
+                        alignItems: 'center',
+                        marginLeft: 10,
+                        flexDirection: 'row',
+                        marginHorizontal: 20,
+                      }}>
+                      <View style={{width: '55%', alignItems: 'center'}}>
+                        <Text
+                          style={{
+                            fontWeight: '700',
+                            fontSize: 15,
+                            color: COLORS.black,
+                            marginLeft: 10,
+                          }}>
+                          {`${item.exam_name} `}
+                        </Text>
+                      </View>
 
-                    <View style={{width: '25%', alignItems: 'center'}}>
-                      <Text
-                        style={{
-                          fontSize: 14,
-                          fontWeight: '600',
-                          color: COLORS.primary,
-                        }}>
-                        {`৳ ${item.price}`}
-                      </Text>
-                    </View>
-                    <View style={{width: '25%', alignItems: 'center'}}>
-                      <Text
-                        style={{
-                          fontWeight: '700',
-                          fontSize: 15,
-                          color: COLORS.black,
-                          marginLeft: 10,
-                        }}>
-                        {`${item.status} `}
-                      </Text>
+                      <View style={{width: '25%', alignItems: 'center'}}>
+                        <Text
+                          style={{
+                            fontSize: 14,
+                            fontWeight: '600',
+                            color: COLORS.primary,
+                          }}>
+                          {`৳ ${item.price}`}
+                        </Text>
+                      </View>
+                      <View style={{width: '25%', alignItems: 'center'}}>
+                        <Text
+                          style={{
+                            fontWeight: '700',
+                            fontSize: 15,
+                            color: COLORS.black,
+                            marginLeft: 10,
+                          }}>
+                          {`${item.status} `}
+                        </Text>
+                      </View>
                     </View>
                   </View>
-                </View>
-              </TouchableOpacity>
-            );
-          }}
-        />
-      </View>
+                </TouchableOpacity>
+              );
+            }}
+          />
+        </View>
+      ) : (
+        <View>
+          <Text>oka</Text>
+        </View>
+      )}
     </>
   );
 };

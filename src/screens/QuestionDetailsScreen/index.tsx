@@ -17,6 +17,8 @@ import {cardPerSlide} from './config';
 import {COLORS, SIZES, icons} from '../../constants';
 import {useNavigation, useRoute} from '@react-navigation/native';
 import AsysncStorage from '@react-native-community/async-storage';
+import axios from 'axios';
+import {endpoint, endpointImage} from '../../../apiConstants';
 // import Sound from 'react-native-sound';
 var Sound = require('react-native-sound');
 const {width: screenWidth} = Dimensions.get('window');
@@ -138,8 +140,8 @@ const data1 = [
 
 function MovieHome() {
   const navigation = useNavigation();
-
-  const [data, setData] = useState<any>(data1);
+  const route = useRoute();
+  const [data, setData] = useState<any>();
   const [totalSlide, setTotalSlide] = useState<any>(0);
   const [currentSlide, setCurrentSlide] = useState<any>(1);
   const [showCurrentQsn, setShowCurrentQsn] = useState<any>(0);
@@ -148,7 +150,6 @@ function MovieHome() {
   const [examineeNumberLoad, setExamineeNumberLoad] = useState<any>();
   const [isPrev, setIsPrev] = useState<any>(false);
   const [isAudioPlay, setIsAudioPlay] = useState<any>(false);
-
   const [remainingQSN, setRemainingQSN] = useState<any>([]);
   const [showQuestionDetail, setShowQuestionDetail] = useState<any>(false);
   const stepCarousel = useRef();
@@ -278,7 +279,7 @@ function MovieHome() {
     }
   }, [showCurrentQsn]);
 
-  const noOfSlides = Math.ceil(data.length / cardPerSlide);
+  const noOfSlides = Math.ceil(data?.length / cardPerSlide);
 
   function startTimer(duration: any) {
     var timer = duration,
@@ -319,7 +320,9 @@ function MovieHome() {
     }
   }
   async function onHandelChangeQuestionScreen() {
-    navigation.navigate('ExamDoneScreen');
+    navigation.navigate('ExamDoneScreen', {
+      data: data,
+    });
   }
 
   async function handleLoadingData() {
@@ -328,9 +331,25 @@ function MovieHome() {
     setFullName(fullNameLoad);
     setExamineeNumberLoad(examineeNumberLoad);
   }
+
+  const handleFetchItem = () => {
+    const data = {
+      id: route.params.id,
+    };
+
+    axios
+      .post(`${endpoint}/home/QuestionsDetailsView/`, data)
+      .then(res => {
+        // console.log(res.data.data);
+        setData(res.data.data);
+      })
+      .catch(_err => {});
+  };
+
   useEffect(() => {
     handleLoadingData();
-  }, []);
+    handleFetchItem();
+  }, [route.params.id]);
 
   const onHandelChangeScreen1 = () => {
     let sound = new Sound(
@@ -338,718 +357,1072 @@ function MovieHome() {
       '',
       (error: any, _sound: any) => {
         if (error) {
+          console.log(error, 'error');
           return;
         }
-
         if (isAudioPlay) {
-          sound.pause();
-          setIsAudioPlay(isAudioPlay => !isAudioPlay);
-
+          console.log(isAudioPlay, 'oka');
+          // sound.pause();
+          // setIsAudioPlay(isAudioPlay => !isAudioPlay);
         } else {
+          console.log(isAudioPlay, 'oka');
           sound.play(() => {
-            // sound.release();
+            console.log(isAudioPlay, 'odfgdfka');
+            sound.release();
             setIsAudioPlay(false);
           });
-          setIsAudioPlay(isAudioPlay => !isAudioPlay);
+          // setIsAudioPlay(isAudioPlay => !isAudioPlay);
         }
       },
-
-
-
-
-
-
-
-
     );
-
-
-
-    if (isAudioPlay) {
-      sound.pause();
-      setIsAudioPlay(isAudioPlay => !isAudioPlay);
-
-    } else {
-      // sound.play(() => {
-      //   // sound.release();
-      //   setIsAudioPlay(false);
-      // });
-      // setIsAudioPlay(isAudioPlay => !isAudioPlay);
-    }
-
-
-
-
-
-
   };
+
+  const onHandelPlayAudio = url => {
+    let sound = new Sound(url, '', (error: any, _sound: any) => {
+      if (error) {
+        console.log(error, 'error');
+        return;
+      }
+      if (isAudioPlay) {
+        console.log(isAudioPlay, 'oka');
+        // sound.pause();
+        // setIsAudioPlay(isAudioPlay => !isAudioPlay);
+      } else {
+        console.log(isAudioPlay, 'oka');
+        sound.play(() => {
+          console.log(isAudioPlay, 'odfgdfka');
+          sound.release();
+          setIsAudioPlay(false);
+        });
+        // setIsAudioPlay(isAudioPlay => !isAudioPlay);
+      }
+    });
+  };
+  console.log(remainingQSN,'remainingQSN')
 
   return (
     <>
-      {showQuestionDetail ? (
-        <View style={{flex: 1, backgroundColor: COLORS.white}}>
-          <View
-            style={{
-              marginTop: StatusBar.currentHeight + 10,
-              // marginHorizontal:10
-            }}>
-            <View
-              style={{
-                flexDirection: 'row',
-                justifyContent: 'space-between',
-                // marginHorizontal: 10,
-                borderBottomColor: COLORS.gray50,
-                borderBottomWidth: 1,
-                borderTopColor: COLORS.gray50,
-                borderTopWidth: 1,
-                height: 40,
-                flexWrap: 'wrap',
-                // alignItems: 'center',
-              }}>
+      {data ? (
+        <>
+          {showQuestionDetail ? (
+            <View style={{flex: 1, backgroundColor: COLORS.white}}>
               <View
                 style={{
-                  width: SIZES.width * 0.4,
-                  alignItems: 'center',
-                  justifyContent: 'center',
+                  marginTop: StatusBar.currentHeight + 10,
+                  // marginHorizontal:10
                 }}>
-                <Text
+                <View
                   style={{
-                    fontSize: 14,
-                    fontWeight: '600',
-                    color: COLORS.black,
-                  }}>
-                  Whole QN: {totalSlide}
-                </Text>
-              </View>
-              <View
-                style={{
-                  width: SIZES.width * 0.4,
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  borderLeftColor: COLORS.gray50,
-                  borderLeftWidth: 1,
-                  height: 40,
-                  borderRightColor: COLORS.gray50,
-                  borderRightWidth: 1,
-                }}>
-                <Text
-                  style={{
-                    fontSize: 14,
-                    fontWeight: '600',
-                    color: COLORS.black,
-                  }}>
-                  Remaining QN: {remainingQSN?.length}
-                </Text>
-              </View>
-
-              <View
-                style={{
-                  width: SIZES.width * 0.2,
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                }}>
-                <Text
-                  style={{
-                    fontSize: 15,
-                    fontWeight: '800',
-                    color: COLORS.black,
-                  }}>
-                  {qsnTime}
-                </Text>
-              </View>
-            </View>
-          </View>
-          <ScrollView>
-            <View style={{marginBottom: 50}}>
-              <ScrollView
-                ref={stepCarousel}
-                contentContainerStyle={{
-                  marginTop: 15,
-                  marginHorizontal: 10,
-                }}
-                horizontal
-                pagingEnabled
-                showsHorizontalScrollIndicator={false}
-                decelerationRate={0}
-                scrollEnabled={false}
-                snapToAlignment={'center'}
-                onContentSizeChange={setTotalSlides}
-                onMomentumScrollEnd={handleScrollEnd}>
-                {[...Array(noOfSlides)].map((e, i) => {
-                  const startIndex = i;
-                  const startPosition = startIndex;
-                  const endPosition = startIndex + 1;
-                  return (
-                    <>
-                      {data.slice(startPosition, endPosition).map(
-                        (
-                          v: {
-                            qsnNumber: any;
-                            qsn: any;
-                            selected: number;
-                            option1:
-                              | string
-                              | number
-                              | boolean
-                              | React.ReactElement<
-                                  any,
-                                  string | React.JSXElementConstructor<any>
-                                >
-                              | React.ReactFragment
-                              | React.ReactPortal
-                              | null
-                              | undefined;
-                            option2:
-                              | string
-                              | number
-                              | boolean
-                              | React.ReactElement<
-                                  any,
-                                  string | React.JSXElementConstructor<any>
-                                >
-                              | React.ReactFragment
-                              | React.ReactPortal
-                              | null
-                              | undefined;
-                            option3:
-                              | string
-                              | number
-                              | boolean
-                              | React.ReactElement<
-                                  any,
-                                  string | React.JSXElementConstructor<any>
-                                >
-                              | React.ReactFragment
-                              | React.ReactPortal
-                              | null
-                              | undefined;
-                            option4:
-                              | string
-                              | number
-                              | boolean
-                              | React.ReactElement<
-                                  any,
-                                  string | React.JSXElementConstructor<any>
-                                >
-                              | React.ReactFragment
-                              | React.ReactPortal
-                              | null
-                              | undefined;
-                          },
-                          index: any,
-                        ) => {
-                          return (
-                            <>
-                              <View style={{width: SIZES.width}}>
-                                <Text
-                                  style={{
-                                    fontWeight: '700',
-                                    fontSize: 14,
-                                    color: COLORS.black,
-                                  }}>
-                                  {`${v?.qsnNumber}. ${v?.qsn}`}
-                                </Text>
-
-                                <TouchableOpacity
-                                  onPress={() => {
-                                    data[i].selected = 1;
-                                    data[i].ans = true;
-
-                                    setData([...data]);
-                                    let addQsn = v?.qsnNumber;
-                                    if (!remainingQSN?.includes(addQsn)) {
-                                      setRemainingQSN([
-                                        ...remainingQSN,
-                                        addQsn,
-                                      ]);
-                                    }
-
-                                    // setSentMultipleUserGift(data);
-                                  }}>
-                                  <View
-                                    style={{
-                                      flexDirection: 'row',
-                                      alignItems: 'center',
-                                      marginTop: 15,
-                                      // justifyContent: 'center',
-                                    }}>
-                                    <View
-                                      style={{
-                                        width: 20,
-                                        height: 20,
-                                        borderWidth: 1,
-                                        borderColor:
-                                          v?.selected == 1
-                                            ? COLORS.primary
-                                            : COLORS.black,
-                                        borderRadius: 50,
-                                        alignItems: 'center',
-                                        justifyContent: 'center',
-                                      }}>
-                                      <View
-                                        style={{
-                                          width: 13,
-                                          height: 13,
-
-                                          backgroundColor:
-                                            v?.selected == 1
-                                              ? COLORS.primary
-                                              : COLORS.white,
-                                          borderRadius: 50,
-                                        }}
-                                      />
-                                    </View>
-
-                                    <Text
-                                      style={{
-                                        fontWeight: '700',
-                                        fontSize: 14,
-                                        color: COLORS.black,
-                                        marginLeft: 10,
-                                      }}>
-                                      {v?.option1}
-                                    </Text>
-                                  </View>
-                                </TouchableOpacity>
-                                <TouchableOpacity
-                                  onPress={() => {
-                                    data[i].selected = 2;
-                                    data[i].ans = true;
-                                    setData([...data]);
-                                    let addQsn = v?.qsnNumber;
-                                    if (!remainingQSN?.includes(addQsn)) {
-                                      setRemainingQSN([
-                                        ...remainingQSN,
-                                        addQsn,
-                                      ]);
-                                    }
-                                  }}>
-                                  <View
-                                    style={{
-                                      flexDirection: 'row',
-                                      alignItems: 'center',
-                                      marginTop: 15,
-                                      // justifyContent: 'center',
-                                    }}>
-                                    <View
-                                      style={{
-                                        width: 20,
-                                        height: 20,
-                                        borderWidth: 1,
-                                        borderColor:
-                                          v?.selected == 2
-                                            ? COLORS.primary
-                                            : COLORS.black,
-                                        borderRadius: 50,
-                                        alignItems: 'center',
-                                        justifyContent: 'center',
-                                      }}>
-                                      <View
-                                        style={{
-                                          width: 13,
-                                          height: 13,
-
-                                          backgroundColor:
-                                            v?.selected == 2
-                                              ? COLORS.primary
-                                              : COLORS.white,
-                                          borderRadius: 50,
-                                        }}
-                                      />
-                                    </View>
-
-                                    <Text
-                                      style={{
-                                        fontWeight: '700',
-                                        fontSize: 14,
-                                        color: COLORS.black,
-                                        marginLeft: 10,
-                                      }}>
-                                      {v?.option2}
-                                    </Text>
-                                  </View>
-                                </TouchableOpacity>
-                                <TouchableOpacity
-                                  onPress={() => {
-                                    data[i].selected = 3;
-                                    data[i].ans = true;
-                                    setData([...data]);
-                                    let addQsn = v?.qsnNumber;
-                                    if (!remainingQSN?.includes(addQsn)) {
-                                      setRemainingQSN([
-                                        ...remainingQSN,
-                                        addQsn,
-                                      ]);
-                                    }
-                                  }}>
-                                  <View
-                                    style={{
-                                      flexDirection: 'row',
-                                      alignItems: 'center',
-                                      marginTop: 15,
-                                      // justifyContent: 'center',
-                                    }}>
-                                    <View
-                                      style={{
-                                        width: 20,
-                                        height: 20,
-                                        borderWidth: 1,
-                                        borderColor:
-                                          v?.selected == 3
-                                            ? COLORS.primary
-                                            : COLORS.black,
-                                        borderRadius: 50,
-                                        alignItems: 'center',
-                                        justifyContent: 'center',
-                                      }}>
-                                      <View
-                                        style={{
-                                          width: 13,
-                                          height: 13,
-
-                                          backgroundColor:
-                                            v?.selected == 3
-                                              ? COLORS.primary
-                                              : COLORS.white,
-                                          borderRadius: 50,
-                                        }}
-                                      />
-                                    </View>
-
-                                    <Text
-                                      style={{
-                                        fontWeight: '700',
-                                        fontSize: 14,
-                                        color: COLORS.black,
-                                        marginLeft: 10,
-                                      }}>
-                                      {v?.option3}
-                                    </Text>
-                                  </View>
-                                </TouchableOpacity>
-                                <TouchableOpacity
-                                  onPress={() => {
-                                    data[i].selected = 4;
-                                    data[i].ans = true;
-                                    setData([...data]);
-                                    let addQsn = v?.qsnNumber;
-                                    if (!remainingQSN?.includes(addQsn)) {
-                                      setRemainingQSN([
-                                        ...remainingQSN,
-                                        addQsn,
-                                      ]);
-                                    }
-                                  }}>
-                                  <View
-                                    style={{
-                                      flexDirection: 'row',
-                                      alignItems: 'center',
-                                      marginTop: 15,
-                                      // justifyContent: 'center',
-                                    }}>
-                                    <View
-                                      style={{
-                                        width: 20,
-                                        height: 20,
-                                        borderWidth: 1,
-                                        borderColor:
-                                          v?.selected == 4
-                                            ? COLORS.primary
-                                            : COLORS.black,
-                                        borderRadius: 50,
-                                        alignItems: 'center',
-                                        justifyContent: 'center',
-                                      }}>
-                                      <View
-                                        style={{
-                                          width: 13,
-                                          height: 13,
-
-                                          backgroundColor:
-                                            v?.selected == 4
-                                              ? COLORS.primary
-                                              : COLORS.white,
-                                          borderRadius: 50,
-                                        }}
-                                      />
-                                    </View>
-                                    <Text
-                                      style={{
-                                        fontWeight: '700',
-                                        fontSize: 14,
-                                        color: COLORS.black,
-                                        marginLeft: 10,
-                                      }}>
-                                      {v?.option4}
-                                    </Text>
-                                  </View>
-                                </TouchableOpacity>
-                              </View>
-                            </>
-                          );
-                        },
-                      )}
-                    </>
-                  );
-                })}
-              </ScrollView>
-            </View>
-          </ScrollView>
-          <View
-            style={{
-              flexDirection: 'row',
-              justifyContent: 'space-evenly',
-              borderTopColor: COLORS.gray30,
-              borderTopWidth: 1,
-              height: 40,
-              alignItems: 'center',
-            }}>
-            <TouchableOpacity
-              style={{
-                width: SIZES.width * 0.25,
-                alignItems: 'center',
-                justifyContent: 'center',
-                flexDirection: 'row',
-              }}
-              onPress={goToPrev}
-              disabled={!isPrev}>
-              <Image
-                source={icons.right_arrow}
-                resizeMode="contain"
-                style={{
-                  width: 15,
-                  height: 15,
-                  marginRight: 10,
-                  // borderRadius: 50,
-                  tintColor: COLORS.black,
-                  transform: [{rotate: '180deg'}],
-                }}
-              />
-              <Text
-                style={{fontSize: 15, fontWeight: '800', color: COLORS.black}}>
-                Prev
-              </Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity
-              onPress={onHandelChangeScreen}
-              style={{
-                borderLeftColor: COLORS.gray30,
-                borderLeftWidth: 1,
-                borderRightColor: COLORS.gray30,
-                borderRightWidth: 1,
-                height: 40,
-                alignItems: 'center',
-                justifyContent: 'center',
-                width: SIZES.width * 0.5,
-              }}>
-              <Text
-                style={{fontSize: 15, fontWeight: '800', color: COLORS.black}}>
-                Total Questions
-              </Text>
-            </TouchableOpacity>
-
-            {remainingQSN?.length == 10 ? (
-              <TouchableOpacity
-                style={{
-                  width: SIZES.width * 0.25,
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  flexDirection: 'row',
-                }}
-                onPress={onHandelChangeQuestionScreen}>
-                <Text
-                  style={{
-                    fontSize: 15,
-                    fontWeight: '800',
-                    color: COLORS.black,
-                  }}>
-                  Result
-                </Text>
-
-                <Image
-                  source={icons.right_arrow}
-                  resizeMode="contain"
-                  style={{
-                    width: 15,
-                    height: 15,
-                    marginLeft: 10,
-                    // borderRadius: 50,
-                    tintColor: COLORS.black,
-                  }}
-                />
-              </TouchableOpacity>
-            ) : (
-              <TouchableOpacity
-                style={{
-                  width: SIZES.width * 0.25,
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  flexDirection: 'row',
-                }}
-                onPress={goToNext}
-                disabled={!isNext}>
-                <Text
-                  style={{
-                    fontSize: 15,
-                    fontWeight: '800',
-                    color: COLORS.black,
-                  }}>
-                  Next
-                </Text>
-
-                <Image
-                  source={icons.right_arrow}
-                  resizeMode="contain"
-                  style={{
-                    width: 15,
-                    height: 15,
-                    marginLeft: 10,
-                    // borderRadius: 50,
-                    tintColor: COLORS.black,
-                  }}
-                />
-              </TouchableOpacity>
-            )}
-          </View>
-        </View>
-      ) : (
-        <View
-          style={{
-            flex: 1,
-            // justifyContent: 'center',
-            // alignItems: 'center',
-            // backgroundColor: COLORS.white,
-          }}>
-          <View
-            style={{
-              marginTop: StatusBar.currentHeight + 10,
-              // justifyContent: 'center',
-              // alignItems: 'center',
-              marginHorizontal: 20,
-            }}>
-            <View
-              style={{flexDirection: 'row', justifyContent: 'space-between'}}>
-              <Text
-                style={{fontWeight: '700', color: COLORS.black, fontSize: 17}}>
-                {fullName}
-              </Text>
-              <Text
-                style={{fontWeight: '700', color: COLORS.black, fontSize: 17}}>
-                {examineeNumberLoad}
-              </Text>
-            </View>
-          </View>
-
-          <View
-            style={{
-              // marginHorizontal: 10,
-              flexDirection: 'row',
-              flexWrap: 'wrap',
-              alignItems: 'center',
-              justifyContent: 'center',
-              marginTop: 20,
-              marginRight: 10,
-            }}>
-            {data?.map((item: any, index: number) => (
-              <>
-                <TouchableOpacity
-                  onPress={() => {
-                    setShowCurrentQsn(item.qsnNumber);
-                    onHandelChangeScreen();
+                    flexDirection: 'row',
+                    justifyContent: 'space-between',
+                    // marginHorizontal: 10,
+                    borderBottomColor: COLORS.gray50,
+                    borderBottomWidth: 1,
+                    borderTopColor: COLORS.gray50,
+                    borderTopWidth: 1,
+                    height: 40,
+                    flexWrap: 'wrap',
+                    // alignItems: 'center',
                   }}>
                   <View
                     style={{
-                      width: 65,
-                      height: 35,
-                      borderWidth: 0.6,
-                      borderColor: COLORS.primary,
+                      width: SIZES.width * 0.4,
                       alignItems: 'center',
                       justifyContent: 'center',
-                      backgroundColor: item?.selected
-                        ? COLORS.primary
-                        : COLORS.white,
-                      borderRadius: 5,
-                      marginLeft: 10,
-                      marginTop: 15,
                     }}>
                     <Text
                       style={{
-                        fontWeight: 'bold',
-                        fontSize: 15,
-                        color: item?.selected ? COLORS.white : COLORS.primary,
+                        fontSize: 14,
+                        fontWeight: '600',
+                        color: COLORS.black,
                       }}>
-                      {item?.qsnNumber}
+                      Whole QN: {totalSlide}
                     </Text>
                   </View>
-                </TouchableOpacity>
-              </>
-            ))}
-          </View>
-          <View
-            style={{
-              position: 'absolute',
-              left: 0,
-              right: 0,
-              alignItems: 'center',
-              bottom: 20,
-            }}>
-            {remainingQSN?.length == 10 ? (
-              <TouchableOpacity
-                style={{marginTop: 30}}
-                onPress={onHandelChangeQuestionScreen}>
-                <View
-                  style={{
-                    backgroundColor: COLORS.primary,
-                    height: 35,
-                    width: 170,
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    borderRadius: 5,
-                  }}>
-                  <Text style={{fontWeight: 'bold', color: COLORS.white}}>
-                    Result
-                  </Text>
-                </View>
-              </TouchableOpacity>
-            ) : (
-              <TouchableOpacity
-                style={{marginTop: 30}}
-                onPress={onHandelChangeScreen}>
-                <View
-                  style={{
-                    backgroundColor: COLORS.primary,
-                    height: 35,
-                    width: 170,
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    borderRadius: 5,
-                  }}>
-                  <Text style={{fontWeight: 'bold', color: COLORS.white}}>
-                    Submit Answer
-                  </Text>
-                </View>
-              </TouchableOpacity>
-            )}
-          </View>
+                  <View
+                    style={{
+                      width: SIZES.width * 0.4,
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      borderLeftColor: COLORS.gray50,
+                      borderLeftWidth: 1,
+                      height: 40,
+                      borderRightColor: COLORS.gray50,
+                      borderRightWidth: 1,
+                    }}>
+                    <Text
+                      style={{
+                        fontSize: 14,
+                        fontWeight: '600',
+                        color: COLORS.black,
+                      }}>
+                      Remaining QN: {remainingQSN?.length}
+                    </Text>
+                  </View>
 
-          <TouchableOpacity
-            style={{marginTop: 30}}
-            onPress={onHandelChangeScreen1}>
+                  <View
+                    style={{
+                      width: SIZES.width * 0.2,
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                    }}>
+                    <Text
+                      style={{
+                        fontSize: 15,
+                        fontWeight: '800',
+                        color: COLORS.black,
+                      }}>
+                      {qsnTime}
+                    </Text>
+                  </View>
+                </View>
+              </View>
+              <ScrollView>
+                <View style={{marginBottom: 50}}>
+                  <ScrollView
+                    ref={stepCarousel}
+                    contentContainerStyle={{
+                      marginTop: 15,
+                      marginHorizontal: 10,
+                    }}
+                    horizontal
+                    pagingEnabled
+                    showsHorizontalScrollIndicator={false}
+                    decelerationRate={0}
+                    scrollEnabled={false}
+                    snapToAlignment={'center'}
+                    onContentSizeChange={setTotalSlides}
+                    onMomentumScrollEnd={handleScrollEnd}>
+                    {[...Array(noOfSlides)].map((e, i) => {
+                      const startIndex = i;
+                      const startPosition = startIndex;
+                      const endPosition = startIndex + 1;
+                      return (
+                        <>
+                          {data
+                            .slice(startPosition, endPosition)
+                            .map((v: any, index: any) => {
+                              return (
+                                <>
+                                  <View style={{width: SIZES.width}}>
+                                    <Text
+                                      style={{
+                                        fontWeight: '900',
+                                        fontSize: 17,
+                                        color: COLORS.black,
+                                      }}>
+                                      {`${i + 1}. ${v?.question_text}`}
+                                    </Text>
+
+                                    <View
+                                      style={{
+                                        alignItems: 'center',
+                                        justifyContent: 'center',
+                                      }}>
+                                      {v?.question_media ? (
+                                        <View
+                                          style={{
+                                            flexDirection: 'row',
+                                            alignItems: 'center',
+                                            marginTop: 15,
+                                            // justifyContent: 'center',
+                                          }}>
+                                          {v.question_media.slice(
+                                            Math.max(
+                                              v.question_media.length - 3,
+                                              1,
+                                            ),
+                                          ) == 'jpg' ||
+                                          v.question_media.slice(
+                                            Math.max(
+                                              v.question_media.length - 3,
+                                              1,
+                                            ),
+                                          ) == 'png' ||
+                                          v.question_media.slice(
+                                            Math.max(
+                                              v.question_media.length - 3,
+                                              1,
+                                            ),
+                                          ) == 'peg' ? (
+                                            <Image
+                                              source={{
+                                                uri: `${endpointImage}/${v.question_media}`,
+                                              }}
+                                              resizeMode="contain"
+                                              style={{
+                                                width: 120,
+                                                height: 120,
+                                                // borderRadius: 50,
+                                                marginLeft: 10,
+                                                // tintColor: COLORS.white,
+                                              }}
+                                            />
+                                          ) : (
+                                            <TouchableOpacity
+                                              onPress={() => {
+                                                onHandelPlayAudio(
+                                                  `${endpointImage}/${v.question_media}`,
+                                                );
+                                              }}>
+                                              <Image
+                                                source={icons.play}
+                                                resizeMode="contain"
+                                                style={{
+                                                  width: 30,
+                                                  height: 30,
+                                                  // borderRadius: 50,
+                                                  marginLeft: 10,
+                                                  tintColor: COLORS.black,
+                                                }}
+                                              />
+                                            </TouchableOpacity>
+                                          )}
+                                        </View>
+                                      ) : null}
+                                    </View>
+
+                                    {/* ===============Option-1============================ */}
+
+                                    {v?.option_media_1 ? (
+                                      <TouchableOpacity
+                                        onPress={() => {
+                                          data[i].selected = 1;
+                                          data[i].ans = true;
+
+                                          setData([...data]);
+                                          let addQsn = v?.id;
+                                          if (!remainingQSN?.includes(addQsn)) {
+                                            setRemainingQSN([
+                                              ...remainingQSN,
+                                              addQsn,
+                                            ]);
+                                          }
+
+                                          // setSentMultipleUserGift(data);
+                                        }}>
+                                        <View
+                                          style={{
+                                            flexDirection: 'row',
+                                            alignItems: 'center',
+                                            marginTop: 15,
+                                            // justifyContent: 'center',
+                                          }}>
+                                          <View
+                                            style={{
+                                              width: 20,
+                                              height: 20,
+                                              borderWidth: 1,
+                                              borderColor:
+                                                v?.selected == 1
+                                                  ? COLORS.primary
+                                                  : COLORS.black,
+                                              borderRadius: 50,
+                                              alignItems: 'center',
+                                              justifyContent: 'center',
+                                            }}>
+                                            <View
+                                              style={{
+                                                width: 13,
+                                                height: 13,
+
+                                                backgroundColor:
+                                                  v?.selected == 1
+                                                    ? COLORS.primary
+                                                    : COLORS.white,
+                                                borderRadius: 50,
+                                              }}
+                                            />
+                                          </View>
+
+                                          {v.option_media_1.slice(
+                                            Math.max(
+                                              v.option_media_1.length - 3,
+                                              1,
+                                            ),
+                                          ) == 'jpg' ||
+                                          v.option_media_1.slice(
+                                            Math.max(
+                                              v.option_media_1.length - 3,
+                                              1,
+                                            ),
+                                          ) == 'png' ||
+                                          v.option_media_1.slice(
+                                            Math.max(
+                                              v.option_media_1.length - 3,
+                                              1,
+                                            ),
+                                          ) == 'peg' ? (
+                                            <Image
+                                              source={{
+                                                uri: `${endpointImage}/${v.option_media_1}`,
+                                              }}
+                                              resizeMode="contain"
+                                              style={{
+                                                width: 120,
+                                                height: 120,
+                                                // borderRadius: 50,
+                                                marginLeft: 10,
+                                                // tintColor: COLORS.white,
+                                              }}
+                                            />
+                                          ) : (
+                                            <TouchableOpacity
+                                              onPress={() => {
+                                                onHandelPlayAudio(
+                                                  `${endpointImage}/${v.option_media_1}`,
+                                                );
+                                              }}>
+                                              <Image
+                                                source={icons.play}
+                                                resizeMode="contain"
+                                                style={{
+                                                  width: 30,
+                                                  height: 30,
+                                                  // borderRadius: 50,
+                                                  marginLeft: 10,
+                                                  tintColor: COLORS.black,
+                                                }}
+                                              />
+                                            </TouchableOpacity>
+                                          )}
+                                        </View>
+                                      </TouchableOpacity>
+                                    ) : (
+                                      <TouchableOpacity
+                                        onPress={() => {
+                                          data[i].selected = 1;
+                                          data[i].ans = true;
+
+                                          setData([...data]);
+                                          let addQsn = v?.id;
+                                          if (!remainingQSN?.includes(addQsn)) {
+                                            setRemainingQSN([
+                                              ...remainingQSN,
+                                              addQsn,
+                                            ]);
+                                          }
+
+                                          // setSentMultipleUserGift(data);
+                                        }}>
+                                        <View
+                                          style={{
+                                            flexDirection: 'row',
+                                            alignItems: 'center',
+                                            marginTop: 15,
+                                            // justifyContent: 'center',
+                                          }}>
+                                          <View
+                                            style={{
+                                              width: 20,
+                                              height: 20,
+                                              borderWidth: 1,
+                                              borderColor:
+                                                v?.selected == 1
+                                                  ? COLORS.primary
+                                                  : COLORS.black,
+                                              borderRadius: 50,
+                                              alignItems: 'center',
+                                              justifyContent: 'center',
+                                            }}>
+                                            <View
+                                              style={{
+                                                width: 13,
+                                                height: 13,
+
+                                                backgroundColor:
+                                                  v?.selected == 1
+                                                    ? COLORS.primary
+                                                    : COLORS.white,
+                                                borderRadius: 50,
+                                              }}
+                                            />
+                                          </View>
+
+                                          <Text
+                                            style={{
+                                              fontWeight: '700',
+                                              fontSize: 14,
+                                              color: COLORS.black,
+                                              marginLeft: 10,
+                                            }}>
+                                            {v?.option_text_1}
+                                          </Text>
+                                        </View>
+                                      </TouchableOpacity>
+                                    )}
+
+                                    {/* =========Option-2================================= */}
+                                    {v?.option_media_2 ? (
+                                      <TouchableOpacity
+                                        onPress={() => {
+                                          data[i].selected = 2;
+                                          data[i].ans = true;
+
+                                          setData([...data]);
+                                          let addQsn = v?.id;
+                                          if (!remainingQSN?.includes(addQsn)) {
+                                            setRemainingQSN([
+                                              ...remainingQSN,
+                                              addQsn,
+                                            ]);
+                                          }
+
+                                          // setSentMultipleUserGift(data);
+                                        }}>
+                                        <View
+                                          style={{
+                                            flexDirection: 'row',
+                                            alignItems: 'center',
+                                            marginTop: 15,
+                                            // justifyContent: 'center',
+                                          }}>
+                                          <View
+                                            style={{
+                                              width: 20,
+                                              height: 20,
+                                              borderWidth: 1,
+                                              borderColor:
+                                                v?.selected == 2
+                                                  ? COLORS.primary
+                                                  : COLORS.black,
+                                              borderRadius: 50,
+                                              alignItems: 'center',
+                                              justifyContent: 'center',
+                                            }}>
+                                            <View
+                                              style={{
+                                                width: 13,
+                                                height: 13,
+
+                                                backgroundColor:
+                                                  v?.selected == 2
+                                                    ? COLORS.primary
+                                                    : COLORS.white,
+                                                borderRadius: 50,
+                                              }}
+                                            />
+                                          </View>
+
+                                          <Image
+                                            source={{
+                                              uri: `${endpointImage}/${v.option_media_2}`,
+                                            }}
+                                            resizeMode="contain"
+                                            style={{
+                                              width: 120,
+                                              height: 120,
+                                              // borderRadius: 50,
+                                              marginLeft: 10,
+                                              // tintColor: COLORS.white,
+                                            }}
+                                          />
+                                        </View>
+                                      </TouchableOpacity>
+                                    ) : (
+                                      <TouchableOpacity
+                                        onPress={() => {
+                                          data[i].selected = 2;
+                                          data[i].ans = true;
+
+                                          setData([...data]);
+                                          let addQsn = v?.id;
+                                          if (!remainingQSN?.includes(addQsn)) {
+                                            setRemainingQSN([
+                                              ...remainingQSN,
+                                              addQsn,
+                                            ]);
+                                          }
+
+                                          // setSentMultipleUserGift(data);
+                                        }}>
+                                        <View
+                                          style={{
+                                            flexDirection: 'row',
+                                            alignItems: 'center',
+                                            marginTop: 15,
+                                            // justifyContent: 'center',
+                                          }}>
+                                          <View
+                                            style={{
+                                              width: 20,
+                                              height: 20,
+                                              borderWidth: 1,
+                                              borderColor:
+                                                v?.selected == 2
+                                                  ? COLORS.primary
+                                                  : COLORS.black,
+                                              borderRadius: 50,
+                                              alignItems: 'center',
+                                              justifyContent: 'center',
+                                            }}>
+                                            <View
+                                              style={{
+                                                width: 13,
+                                                height: 13,
+
+                                                backgroundColor:
+                                                  v?.selected == 2
+                                                    ? COLORS.primary
+                                                    : COLORS.white,
+                                                borderRadius: 50,
+                                              }}
+                                            />
+                                          </View>
+
+                                          <Text
+                                            style={{
+                                              fontWeight: '700',
+                                              fontSize: 14,
+                                              color: COLORS.black,
+                                              marginLeft: 10,
+                                            }}>
+                                            {v?.option_text_2}
+                                          </Text>
+                                        </View>
+                                      </TouchableOpacity>
+                                    )}
+                                    {/* ============Option-3================================= */}
+
+                                    {v?.option_media_3 ? (
+                                      <TouchableOpacity
+                                        onPress={() => {
+                                          data[i].selected = 3;
+                                          data[i].ans = true;
+
+                                          setData([...data]);
+                                          let addQsn = v?.id;
+                                          if (!remainingQSN?.includes(addQsn)) {
+                                            setRemainingQSN([
+                                              ...remainingQSN,
+                                              addQsn,
+                                            ]);
+                                          }
+
+                                          // setSentMultipleUserGift(data);
+                                        }}>
+                                        <View
+                                          style={{
+                                            flexDirection: 'row',
+                                            alignItems: 'center',
+                                            marginTop: 15,
+                                            // justifyContent: 'center',
+                                          }}>
+                                          <View
+                                            style={{
+                                              width: 20,
+                                              height: 20,
+                                              borderWidth: 1,
+                                              borderColor:
+                                                v?.selected == 3
+                                                  ? COLORS.primary
+                                                  : COLORS.black,
+                                              borderRadius: 50,
+                                              alignItems: 'center',
+                                              justifyContent: 'center',
+                                            }}>
+                                            <View
+                                              style={{
+                                                width: 13,
+                                                height: 13,
+
+                                                backgroundColor:
+                                                  v?.selected == 3
+                                                    ? COLORS.primary
+                                                    : COLORS.white,
+                                                borderRadius: 50,
+                                              }}
+                                            />
+                                          </View>
+
+                                          <Image
+                                            source={{
+                                              uri: `${endpointImage}/${v.option_media_3}`,
+                                            }}
+                                            resizeMode="contain"
+                                            style={{
+                                              width: 120,
+                                              height: 120,
+                                              // borderRadius: 50,
+                                              marginLeft: 10,
+                                              // tintColor: COLORS.white,
+                                            }}
+                                          />
+                                        </View>
+                                      </TouchableOpacity>
+                                    ) : (
+                                      <TouchableOpacity
+                                        onPress={() => {
+                                          data[i].selected = 3;
+                                          data[i].ans = true;
+
+                                          setData([...data]);
+                                          let addQsn = v?.id;
+                                          if (!remainingQSN?.includes(addQsn)) {
+                                            setRemainingQSN([
+                                              ...remainingQSN,
+                                              addQsn,
+                                            ]);
+                                          }
+
+                                          // setSentMultipleUserGift(data);
+                                        }}>
+                                        <View
+                                          style={{
+                                            flexDirection: 'row',
+                                            alignItems: 'center',
+                                            marginTop: 15,
+                                            // justifyContent: 'center',
+                                          }}>
+                                          <View
+                                            style={{
+                                              width: 20,
+                                              height: 20,
+                                              borderWidth: 1,
+                                              borderColor:
+                                                v?.selected == 3
+                                                  ? COLORS.primary
+                                                  : COLORS.black,
+                                              borderRadius: 50,
+                                              alignItems: 'center',
+                                              justifyContent: 'center',
+                                            }}>
+                                            <View
+                                              style={{
+                                                width: 13,
+                                                height: 13,
+
+                                                backgroundColor:
+                                                  v?.selected == 3
+                                                    ? COLORS.primary
+                                                    : COLORS.white,
+                                                borderRadius: 50,
+                                              }}
+                                            />
+                                          </View>
+
+                                          <Text
+                                            style={{
+                                              fontWeight: '700',
+                                              fontSize: 14,
+                                              color: COLORS.black,
+                                              marginLeft: 10,
+                                            }}>
+                                            {v?.option_text_3}
+                                          </Text>
+                                        </View>
+                                      </TouchableOpacity>
+                                    )}
+
+                                    {/* ============Option-4================================= */}
+
+                                    {v?.option_media_4 ? (
+                                      <TouchableOpacity
+                                        onPress={() => {
+                                          data[i].selected = 4;
+                                          data[i].ans = true;
+
+                                          setData([...data]);
+                                          let addQsn = v?.id;
+                                          if (!remainingQSN?.includes(addQsn)) {
+                                            setRemainingQSN([
+                                              ...remainingQSN,
+                                              addQsn,
+                                            ]);
+                                          }
+
+                                          // setSentMultipleUserGift(data);
+                                        }}>
+                                        <View
+                                          style={{
+                                            flexDirection: 'row',
+                                            alignItems: 'center',
+                                            marginTop: 15,
+                                            // justifyContent: 'center',
+                                          }}>
+                                          <View
+                                            style={{
+                                              width: 20,
+                                              height: 20,
+                                              borderWidth: 1,
+                                              borderColor:
+                                                v?.selected == 4
+                                                  ? COLORS.primary
+                                                  : COLORS.black,
+                                              borderRadius: 50,
+                                              alignItems: 'center',
+                                              justifyContent: 'center',
+                                            }}>
+                                            <View
+                                              style={{
+                                                width: 13,
+                                                height: 13,
+
+                                                backgroundColor:
+                                                  v?.selected == 4
+                                                    ? COLORS.primary
+                                                    : COLORS.white,
+                                                borderRadius: 50,
+                                              }}
+                                            />
+                                          </View>
+
+                                          <Image
+                                            source={{
+                                              uri: `${endpointImage}/${v.option_media_4}`,
+                                            }}
+                                            resizeMode="contain"
+                                            style={{
+                                              width: 120,
+                                              height: 120,
+                                              // borderRadius: 50,
+                                              marginLeft: 10,
+                                              // tintColor: COLORS.white,
+                                            }}
+                                          />
+                                        </View>
+                                      </TouchableOpacity>
+                                    ) : (
+                                      <TouchableOpacity
+                                        onPress={() => {
+                                          data[i].selected = 4;
+                                          data[i].ans = true;
+
+                                          setData([...data]);
+                                          let addQsn = v?.id;
+                                          console.log(v,'...')
+                                          if (!remainingQSN?.includes(addQsn)) {
+                                            setRemainingQSN([
+                                              ...remainingQSN,
+                                              addQsn,
+                                            ]);
+                                          }
+
+                                          // setSentMultipleUserGift(data);
+                                        }}>
+                                        <View
+                                          style={{
+                                            flexDirection: 'row',
+                                            alignItems: 'center',
+                                            marginTop: 15,
+                                            // justifyContent: 'center',
+                                          }}>
+                                          <View
+                                            style={{
+                                              width: 20,
+                                              height: 20,
+                                              borderWidth: 1,
+                                              borderColor:
+                                                v?.selected == 4
+                                                  ? COLORS.primary
+                                                  : COLORS.black,
+                                              borderRadius: 50,
+                                              alignItems: 'center',
+                                              justifyContent: 'center',
+                                            }}>
+                                            <View
+                                              style={{
+                                                width: 13,
+                                                height: 13,
+
+                                                backgroundColor:
+                                                  v?.selected == 4
+                                                    ? COLORS.primary
+                                                    : COLORS.white,
+                                                borderRadius: 50,
+                                              }}
+                                            />
+                                          </View>
+
+                                          <Text
+                                            style={{
+                                              fontWeight: '700',
+                                              fontSize: 14,
+                                              color: COLORS.black,
+                                              marginLeft: 10,
+                                            }}>
+                                            {v?.option_text_4}
+                                          </Text>
+                                        </View>
+                                      </TouchableOpacity>
+                                    )}
+                                  </View>
+                                </>
+                              );
+                            })}
+                        </>
+                      );
+                    })}
+                  </ScrollView>
+                </View>
+              </ScrollView>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  justifyContent: 'space-evenly',
+                  borderTopColor: COLORS.gray30,
+                  borderTopWidth: 1,
+                  height: 40,
+                  alignItems: 'center',
+                }}>
+                <TouchableOpacity
+                  style={{
+                    width: SIZES.width * 0.25,
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    flexDirection: 'row',
+                  }}
+                  onPress={goToPrev}
+                  disabled={!isPrev}>
+                  <Image
+                    source={icons.right_arrow}
+                    resizeMode="contain"
+                    style={{
+                      width: 15,
+                      height: 15,
+                      marginRight: 10,
+                      // borderRadius: 50,
+                      tintColor: COLORS.black,
+                      transform: [{rotate: '180deg'}],
+                    }}
+                  />
+                  <Text
+                    style={{
+                      fontSize: 15,
+                      fontWeight: '800',
+                      color: COLORS.black,
+                    }}>
+                    Prev
+                  </Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity
+                  onPress={onHandelChangeScreen}
+                  style={{
+                    borderLeftColor: COLORS.gray30,
+                    borderLeftWidth: 1,
+                    borderRightColor: COLORS.gray30,
+                    borderRightWidth: 1,
+                    height: 40,
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    width: SIZES.width * 0.5,
+                  }}>
+                  <Text
+                    style={{
+                      fontSize: 15,
+                      fontWeight: '800',
+                      color: COLORS.black,
+                    }}>
+                    Total Questions
+                  </Text>
+                </TouchableOpacity>
+
+                {remainingQSN?.length == data?.length ? (
+                  <TouchableOpacity
+                    style={{
+                      width: SIZES.width * 0.25,
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      flexDirection: 'row',
+                    }}
+                    onPress={onHandelChangeQuestionScreen}>
+                    <Text
+                      style={{
+                        fontSize: 15,
+                        fontWeight: '800',
+                        color: COLORS.black,
+                      }}>
+                      Result
+                    </Text>
+
+                    <Image
+                      source={icons.right_arrow}
+                      resizeMode="contain"
+                      style={{
+                        width: 15,
+                        height: 15,
+                        marginLeft: 10,
+                        // borderRadius: 50,
+                        tintColor: COLORS.black,
+                      }}
+                    />
+                  </TouchableOpacity>
+                ) : (
+                  <TouchableOpacity
+                    style={{
+                      width: SIZES.width * 0.25,
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      flexDirection: 'row',
+                    }}
+                    onPress={goToNext}
+                    disabled={!isNext}>
+                    <Text
+                      style={{
+                        fontSize: 15,
+                        fontWeight: '800',
+                        color: COLORS.black,
+                      }}>
+                      Next
+                    </Text>
+
+                    <Image
+                      source={icons.right_arrow}
+                      resizeMode="contain"
+                      style={{
+                        width: 15,
+                        height: 15,
+                        marginLeft: 10,
+                        // borderRadius: 50,
+                        tintColor: COLORS.black,
+                      }}
+                    />
+                  </TouchableOpacity>
+                )}
+              </View>
+            </View>
+          ) : (
             <View
               style={{
-                backgroundColor: COLORS.primary,
-                height: 35,
-                width: 170,
-                alignItems: 'center',
-                justifyContent: 'center',
-                borderRadius: 5,
+                flex: 1,
+                // justifyContent: 'center',
+                // alignItems: 'center',
+                // backgroundColor: COLORS.white,
               }}>
-              <Text style={{fontWeight: 'bold', color: COLORS.white}}>
-                Submit Answer
-              </Text>
+              <View
+                style={{
+                  marginTop: StatusBar.currentHeight + 10,
+                  // justifyContent: 'center',
+                  // alignItems: 'center',
+                  marginHorizontal: 20,
+                }}>
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    justifyContent: 'space-between',
+                  }}>
+                  <Text
+                    style={{
+                      fontWeight: '700',
+                      color: COLORS.black,
+                      fontSize: 17,
+                    }}>
+                    {fullName}
+                  </Text>
+                  <Text
+                    style={{
+                      fontWeight: '700',
+                      color: COLORS.black,
+                      fontSize: 17,
+                    }}>
+                    {examineeNumberLoad}
+                  </Text>
+                </View>
+              </View>
+
+              <View
+                style={{
+                  // marginHorizontal: 10,
+                  flexDirection: 'row',
+                  flexWrap: 'wrap',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  marginTop: 20,
+                  marginRight: 10,
+                }}>
+                {data?.map((item: any, index: number) => (
+                  <>
+                    <TouchableOpacity
+                      onPress={() => {
+                        // setShowCurrentQsn(item.qsnNumber);
+                        setShowCurrentQsn(index + 1);
+                        onHandelChangeScreen();
+                      }}>
+                      <View
+                        style={{
+                          width: 65,
+                          height: 35,
+                          borderWidth: 0.6,
+                          borderColor: COLORS.primary,
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          backgroundColor: item?.selected
+                            ? COLORS.primary
+                            : COLORS.white,
+                          borderRadius: 5,
+                          marginLeft: 10,
+                          marginTop: 15,
+                        }}>
+                        <Text
+                          style={{
+                            fontWeight: 'bold',
+                            fontSize: 15,
+                            color: item?.selected
+                              ? COLORS.white
+                              : COLORS.primary,
+                          }}>
+                          {index + 1}
+                        </Text>
+                      </View>
+                    </TouchableOpacity>
+                  </>
+                ))}
+              </View>
+              <View
+                style={{
+                  position: 'absolute',
+                  left: 0,
+                  right: 0,
+                  alignItems: 'center',
+                  bottom: 20,
+                }}>
+                {remainingQSN?.length == data?.length ? (
+                  <TouchableOpacity
+                    style={{marginTop: 30}}
+                    onPress={onHandelChangeQuestionScreen}>
+                    <View
+                      style={{
+                        backgroundColor: COLORS.primary,
+                        height: 35,
+                        width: 170,
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        borderRadius: 5,
+                      }}>
+                      <Text style={{fontWeight: 'bold', color: COLORS.white}}>
+                        Result
+                      </Text>
+                    </View>
+                  </TouchableOpacity>
+                ) : (
+                  <TouchableOpacity
+                    style={{marginTop: 30}}
+                    onPress={onHandelChangeScreen}>
+                    <View
+                      style={{
+                        backgroundColor: COLORS.primary,
+                        height: 35,
+                        width: 170,
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        borderRadius: 5,
+                      }}>
+                      <Text style={{fontWeight: 'bold', color: COLORS.white}}>
+                        Submit Answer
+                      </Text>
+                    </View>
+                  </TouchableOpacity>
+                )}
+              </View>
+
+            
             </View>
-          </TouchableOpacity>
+          )}
+        </>
+      ) : (
+        <View>
+          <Text>olaing</Text>
         </View>
       )}
     </>

@@ -4,45 +4,19 @@ import {
   AllDispatchProp,
   LOADED_ALL_ROOMS_DATA,
   LOADING_ALL_ROOMS_DATA,
-  LOADED_RECHARGE_AGENT,
-  LOADING_RECHARGE_AGENT,
+  LOADED_ALL_QUESTION,
+  LOADING_ALL_QUESTION,
 } from './types';
 import {endpoint} from '../../../apiConstants';
 
-// import {endpoint} from '../../apiConstants';
-
-export const loadRechargeAgent = () => async (dispatch: AllDispatchProp) => {
-  dispatch({type: LOADING_RECHARGE_AGENT, payload: null});
-  const userId = await AsyncStorage.getItem('@myUserId');
-  const data = {
-    userId: userId,
-  };
+export const loadAllQuestions = () => async (dispatch: AllDispatchProp) => {
+  dispatch({type: LOADING_ALL_QUESTION, payload: null});
   axios
-    .post(`${endpoint}/home/RechargeAgentView/`, data)
+    .get(`${endpoint}/home/AllQuestionsListView/`)
     .then(res => {
-      // console.log(res.data,'LOADED_MY_BALANCELOADED_MY_BALANCELOADED_MY_BALANCE')
-      dispatch({type: LOADED_RECHARGE_AGENT, payload: res.data.data});
+      dispatch({type: LOADED_ALL_QUESTION, payload: res.data.data});
     })
     .catch(err => {
-      dispatch({type: LOADED_RECHARGE_AGENT, payload: err});
-    });
-};
-
-// ........................... Load LoginSecurity...........................................
-
-export const loadAllRooms = () => async (dispatch: AllDispatchProp) => {
-  dispatch({type: LOADING_ALL_ROOMS_DATA, payload: null});
-  const myUserId = await AsyncStorage.getItem('@myUserId');
-  const data = {
-    myUserId: myUserId,
-  };
-  axios
-    .post(`${endpoint}/all-rooms-view`, data)
-    .then(res => {
-      // console.log(res.data,'LOADED_MY_BALANCELOADED_MY_BALANCELOADED_MY_BALANCE')
-      dispatch({type: LOADED_ALL_ROOMS_DATA, payload: res.data.serverAllRooms});
-    })
-    .catch(err => {
-      dispatch({type: LOADED_ALL_ROOMS_DATA, payload: err});
+      dispatch({type: LOADED_ALL_QUESTION, payload: err});
     });
 };

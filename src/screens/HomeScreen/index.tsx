@@ -1,12 +1,13 @@
 /* eslint-disable react-native/no-inline-styles */
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {useNavigation} from '@react-navigation/native';
-import {useSelector} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import {COLORS, SIZES, icons, images} from '../../constants';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import {Image, ScrollView, Text, TouchableOpacity, View} from 'react-native';
 import FromInput from './FromInput';
 import AppStatusBar from '../AppStatusBar';
+import {loadAllQuestions} from '../../stores/actions/productActions';
 // import { ScrollView } from 'react-native-gesture-handler';
 
 // import AppStatusBar from '../../AppStatusBar';
@@ -16,13 +17,18 @@ const Home = () => {
   const {userProfile, myRoomsData} = useSelector((state: any) => state.product);
   const [fullName, setFullName] = useState<any>();
   const [phoneNumber, setPhoneNumber] = useState<any>();
-
+  const dispatch = useDispatch();
   async function onHandelChangeScreen() {
     navigation.navigate('ChooseExamScreen', {
       fullName: fullName,
       phoneNumber: phoneNumber,
     });
   }
+
+  useEffect(() => {
+    dispatch(loadAllQuestions());
+  }, []);
+
   return (
     <>
       <AppStatusBar />
