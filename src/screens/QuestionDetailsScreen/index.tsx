@@ -12,6 +12,7 @@ import {
   Platform,
   StatusBar,
   Image,
+  ActivityIndicator,
 } from 'react-native';
 import {cardPerSlide} from './config';
 import {COLORS, SIZES, icons} from '../../constants';
@@ -231,7 +232,7 @@ function MovieHome() {
     }
   };
 
-  const setNext = (status: boolean) => {
+  const handelSetNext = (status: boolean) => {
     // const {isNext} = this.state;
     if (status !== isNext) {
       setIsNext(status);
@@ -252,13 +253,13 @@ function MovieHome() {
 
   const calculateNextPrev = (totalPage: number, currentPage: number) => {
     if (totalPage > currentPage) {
-      setNext(true);
+      handelSetNext(true);
     }
     if (currentPage === 1) {
       setPrev(false);
     }
     if (currentPage === totalPage) {
-      setNext(false);
+      handelSetNext(false);
     }
     if (currentPage > 1) {
       setPrev(true);
@@ -277,7 +278,7 @@ function MovieHome() {
         });
       }
     }
-  }, [showCurrentQsn]);
+  }, [showCurrentQsn, stepCarousel?.current]);
 
   const noOfSlides = Math.ceil(data?.length / cardPerSlide);
 
@@ -320,7 +321,7 @@ function MovieHome() {
     }
   }
   async function onHandelChangeQuestionScreen() {
-    navigation.navigate('ExamDoneScreen', {
+    navigation.replace('ShowResultScreen', {
       data: data,
     });
   }
@@ -351,32 +352,6 @@ function MovieHome() {
     handleFetchItem();
   }, [route.params.id]);
 
-  const onHandelChangeScreen1 = () => {
-    let sound = new Sound(
-      'https://raw.githubusercontent.com/zmxv/react-native-sound-demo/master/advertising.mp3',
-      '',
-      (error: any, _sound: any) => {
-        if (error) {
-          console.log(error, 'error');
-          return;
-        }
-        if (isAudioPlay) {
-          console.log(isAudioPlay, 'oka');
-          // sound.pause();
-          // setIsAudioPlay(isAudioPlay => !isAudioPlay);
-        } else {
-          console.log(isAudioPlay, 'oka');
-          sound.play(() => {
-            console.log(isAudioPlay, 'odfgdfka');
-            sound.release();
-            setIsAudioPlay(false);
-          });
-          // setIsAudioPlay(isAudioPlay => !isAudioPlay);
-        }
-      },
-    );
-  };
-
   const onHandelPlayAudio = url => {
     let sound = new Sound(url, '', (error: any, _sound: any) => {
       if (error) {
@@ -398,7 +373,6 @@ function MovieHome() {
       }
     });
   };
-  console.log(remainingQSN,'remainingQSN')
 
   return (
     <>
@@ -804,19 +778,57 @@ function MovieHome() {
                                             />
                                           </View>
 
-                                          <Image
-                                            source={{
-                                              uri: `${endpointImage}/${v.option_media_2}`,
-                                            }}
-                                            resizeMode="contain"
-                                            style={{
-                                              width: 120,
-                                              height: 120,
-                                              // borderRadius: 50,
-                                              marginLeft: 10,
-                                              // tintColor: COLORS.white,
-                                            }}
-                                          />
+                                          {v.option_media_2.slice(
+                                            Math.max(
+                                              v.option_media_2.length - 3,
+                                              1,
+                                            ),
+                                          ) == 'jpg' ||
+                                          v.option_media_2.slice(
+                                            Math.max(
+                                              v.option_media_2.length - 3,
+                                              1,
+                                            ),
+                                          ) == 'png' ||
+                                          v.option_media_2.slice(
+                                            Math.max(
+                                              v.option_media_2.length - 3,
+                                              1,
+                                            ),
+                                          ) == 'peg' ? (
+                                            <Image
+                                              source={{
+                                                uri: `${endpointImage}/${v.option_media_2}`,
+                                              }}
+                                              resizeMode="contain"
+                                              style={{
+                                                width: 120,
+                                                height: 120,
+                                                // borderRadius: 50,
+                                                marginLeft: 10,
+                                                // tintColor: COLORS.white,
+                                              }}
+                                            />
+                                          ) : (
+                                            <TouchableOpacity
+                                              onPress={() => {
+                                                onHandelPlayAudio(
+                                                  `${endpointImage}/${v.option_media_2}`,
+                                                );
+                                              }}>
+                                              <Image
+                                                source={icons.play}
+                                                resizeMode="contain"
+                                                style={{
+                                                  width: 30,
+                                                  height: 30,
+                                                  // borderRadius: 50,
+                                                  marginLeft: 10,
+                                                  tintColor: COLORS.black,
+                                                }}
+                                              />
+                                            </TouchableOpacity>
+                                          )}
                                         </View>
                                       </TouchableOpacity>
                                     ) : (
@@ -935,19 +947,57 @@ function MovieHome() {
                                             />
                                           </View>
 
-                                          <Image
-                                            source={{
-                                              uri: `${endpointImage}/${v.option_media_3}`,
-                                            }}
-                                            resizeMode="contain"
-                                            style={{
-                                              width: 120,
-                                              height: 120,
-                                              // borderRadius: 50,
-                                              marginLeft: 10,
-                                              // tintColor: COLORS.white,
-                                            }}
-                                          />
+                                          {v.option_media_3.slice(
+                                            Math.max(
+                                              v.option_media_3.length - 3,
+                                              1,
+                                            ),
+                                          ) == 'jpg' ||
+                                          v.option_media_3.slice(
+                                            Math.max(
+                                              v.option_media_3.length - 3,
+                                              1,
+                                            ),
+                                          ) == 'png' ||
+                                          v.option_media_3.slice(
+                                            Math.max(
+                                              v.option_media_3.length - 3,
+                                              1,
+                                            ),
+                                          ) == 'peg' ? (
+                                            <Image
+                                              source={{
+                                                uri: `${endpointImage}/${v.option_media_3}`,
+                                              }}
+                                              resizeMode="contain"
+                                              style={{
+                                                width: 120,
+                                                height: 120,
+                                                // borderRadius: 50,
+                                                marginLeft: 10,
+                                                // tintColor: COLORS.white,
+                                              }}
+                                            />
+                                          ) : (
+                                            <TouchableOpacity
+                                              onPress={() => {
+                                                onHandelPlayAudio(
+                                                  `${endpointImage}/${v.option_media_3}`,
+                                                );
+                                              }}>
+                                              <Image
+                                                source={icons.play}
+                                                resizeMode="contain"
+                                                style={{
+                                                  width: 30,
+                                                  height: 30,
+                                                  // borderRadius: 50,
+                                                  marginLeft: 10,
+                                                  tintColor: COLORS.black,
+                                                }}
+                                              />
+                                            </TouchableOpacity>
+                                          )}
                                         </View>
                                       </TouchableOpacity>
                                     ) : (
@@ -1067,19 +1117,57 @@ function MovieHome() {
                                             />
                                           </View>
 
-                                          <Image
-                                            source={{
-                                              uri: `${endpointImage}/${v.option_media_4}`,
-                                            }}
-                                            resizeMode="contain"
-                                            style={{
-                                              width: 120,
-                                              height: 120,
-                                              // borderRadius: 50,
-                                              marginLeft: 10,
-                                              // tintColor: COLORS.white,
-                                            }}
-                                          />
+                                          {v.option_media_4.slice(
+                                            Math.max(
+                                              v.option_media_4.length - 3,
+                                              1,
+                                            ),
+                                          ) == 'jpg' ||
+                                          v.option_media_4.slice(
+                                            Math.max(
+                                              v.option_media_4.length - 3,
+                                              1,
+                                            ),
+                                          ) == 'png' ||
+                                          v.option_media_4.slice(
+                                            Math.max(
+                                              v.option_media_4.length - 3,
+                                              1,
+                                            ),
+                                          ) == 'peg' ? (
+                                            <Image
+                                              source={{
+                                                uri: `${endpointImage}/${v.option_media_4}`,
+                                              }}
+                                              resizeMode="contain"
+                                              style={{
+                                                width: 120,
+                                                height: 120,
+                                                // borderRadius: 50,
+                                                marginLeft: 10,
+                                                // tintColor: COLORS.white,
+                                              }}
+                                            />
+                                          ) : (
+                                            <TouchableOpacity
+                                              onPress={() => {
+                                                onHandelPlayAudio(
+                                                  `${endpointImage}/${v.option_media_4}`,
+                                                );
+                                              }}>
+                                              <Image
+                                                source={icons.play}
+                                                resizeMode="contain"
+                                                style={{
+                                                  width: 30,
+                                                  height: 30,
+                                                  // borderRadius: 50,
+                                                  marginLeft: 10,
+                                                  tintColor: COLORS.black,
+                                                }}
+                                              />
+                                            </TouchableOpacity>
+                                          )}
                                         </View>
                                       </TouchableOpacity>
                                     ) : (
@@ -1090,7 +1178,7 @@ function MovieHome() {
 
                                           setData([...data]);
                                           let addQsn = v?.id;
-                                          console.log(v,'...')
+                                          console.log(v, '...');
                                           if (!remainingQSN?.includes(addQsn)) {
                                             setRemainingQSN([
                                               ...remainingQSN,
@@ -1262,7 +1350,7 @@ function MovieHome() {
                       style={{
                         fontSize: 15,
                         fontWeight: '800',
-                        color: COLORS.black,
+                        color: isNext ? COLORS.black : COLORS.gray40,
                       }}>
                       Next
                     </Text>
@@ -1415,14 +1503,18 @@ function MovieHome() {
                   </TouchableOpacity>
                 )}
               </View>
-
-            
             </View>
           )}
         </>
       ) : (
-        <View>
-          <Text>olaing</Text>
+        <View
+          style={{
+            alignItems: 'center',
+            justifyContent: 'center',
+            flex: 1,
+            backgroundColor: COLORS.white,
+          }}>
+          <ActivityIndicator animating size="large" color={COLORS.primary} />
         </View>
       )}
     </>

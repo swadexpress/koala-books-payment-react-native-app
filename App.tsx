@@ -17,7 +17,9 @@ import ChooseExamScreen from './src/screens/ChooseExamScreen';
 import ExamineersInformationScreen from './src/screens/ExamineersInformationScreen';
 import QuestionDetailsScreen from './src/screens/QuestionDetailsScreen';
 import QuestionDetailScreen from './src/screens/QuestionDetailsScreen';
-import ExamDoneScreen from './src/screens/ExamDoneScreen';
+import ExamDoneScreen from './src/screens/AnswerSheetScreen';
+import ShowResultScreen from './src/screens/ShowResultScreen';
+import AnswerSheetScreen from './src/screens/AnswerSheetScreen';
 const Stack = createSharedElementStackNavigator();
 
 // const store = createStore(themeReducer, applyMiddleware(thunk));
@@ -75,11 +77,15 @@ const App = () => {
               options={{headerShown: false}}
             />
             <Stack.Screen
-              name="ExamDoneScreen"
-              component={ExamDoneScreen}
+              name="AnswerSheetScreen"
+              component={AnswerSheetScreen}
               options={{headerShown: false}}
             />
-      
+            <Stack.Screen
+              name="ShowResultScreen"
+              component={ShowResultScreen}
+              options={{headerShown: false}}
+            />
           </Stack.Navigator>
         </NavigationContainer>
       </Provider>

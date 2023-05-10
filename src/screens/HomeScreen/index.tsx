@@ -1,10 +1,17 @@
 /* eslint-disable react-native/no-inline-styles */
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {useNavigation} from '@react-navigation/native';
 import {useDispatch, useSelector} from 'react-redux';
 import {COLORS, SIZES, icons, images} from '../../constants';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
-import {Image, ScrollView, Text, TouchableOpacity, View} from 'react-native';
+import {
+  AppState,
+  Image,
+  ScrollView,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import FromInput from './FromInput';
 import AppStatusBar from '../AppStatusBar';
 import {loadAllQuestions} from '../../stores/actions/productActions';
@@ -17,6 +24,8 @@ const Home = () => {
   const {userProfile, myRoomsData} = useSelector((state: any) => state.product);
   const [fullName, setFullName] = useState<any>();
   const [phoneNumber, setPhoneNumber] = useState<any>();
+  const appState = useRef(AppState.currentState);
+
   const dispatch = useDispatch();
   async function onHandelChangeScreen() {
     navigation.navigate('ChooseExamScreen', {
@@ -24,6 +33,22 @@ const Home = () => {
       phoneNumber: phoneNumber,
     });
   }
+
+  useEffect(() => {
+    const subscription = AppState.addEventListener('change', nextAppState => {
+      if (
+        appState.current.match(/inactive|background/) &&
+        nextAppState === 'active'
+      ) {
+        console.log('App has come to the foreground!');
+        dispatch(loadAllQuestions());
+      }
+
+      appState.current = nextAppState;
+    });
+
+    return () => subscription.remove();
+  }, []);
 
   useEffect(() => {
     dispatch(loadAllQuestions());

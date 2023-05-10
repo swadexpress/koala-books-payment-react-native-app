@@ -1,5 +1,6 @@
 
-const localhost = 'http://192.168.0.207:8000';
+// const localhost = 'http://192.168.0.207:8000';
+const localhost = 'https://monir-quiz-app.orbitplug.xyz';
 const imageLocalhost = 'https://res.cloudinary.com/swadexpress';
 // const localhost = 'https://porichoy-live-node-js.onrender.com';
 

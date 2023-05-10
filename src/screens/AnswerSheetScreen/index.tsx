@@ -29,19 +29,8 @@ const ExamineersInformationScreen = () => {
   const [isAudioPlay, setIsAudioPlay] = useState<any>(false);
 
   async function onHandelChangeScreen() {
-    navigation.navigate('AllQuestionScreen');
-    // await AsysncStorage.removeItem('@fullName');
-    // await AsysncStorage.removeItem('@phoneNumber');
-    // await AsysncStorage.removeItem('@username');
-    // await AsysncStorage.removeItem('@selectedOption');
-    // await AsysncStorage.removeItem('@examineeNumber');
-    // await AsysncStorage.setItem('@fullName', route.params.fullName);
-    // await AsysncStorage.setItem('@phoneNumber', route.params.phoneNumber);
-    // await AsysncStorage.setItem('@selectedOption', route.params.selectedOption);
-    // await AsysncStorage.setItem(
-    //   '@examineeNumber',
-    //   route.params.examineeNumber.toString(),
-    // );
+    navigation.replace('AllQuestionScreen')
+   
   }
 
   const onHandelPlayAudio = url => {
@@ -659,11 +648,14 @@ const ExamineersInformationScreen = () => {
           style={{
             alignItems: 'center',
             justifyContent: 'center',
-            marginBottom: 10,
+            position: 'absolute',
+            left:0,right:0,
+            bottom:5,
+
           }}>
           <TouchableOpacity
             style={{marginTop: 30}}
-            // onPress={onHandelChangeScreen1}
+            onPress={onHandelChangeScreen}
           >
             <View
               style={{
