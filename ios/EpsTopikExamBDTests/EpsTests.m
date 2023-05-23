@@ -7,11 +7,11 @@
 #define TIMEOUT_SECONDS 600
 #define TEXT_TO_LOOK_FOR @"Welcome to React"
 
-@interface EpsTests : XCTestCase
+@interface EpsTopikExamBDTests : XCTestCase
 
 @end
 
-@implementation EpsTests
+@implementation EpsTopikExamBDTests
 
 - (BOOL)findSubviewInView:(UIView *)view matching:(BOOL (^)(UIView *view))test
 {

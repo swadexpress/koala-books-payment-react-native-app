@@ -1,4 +1,4 @@
-package com.eps;
+package com.epstopikexambd.epstopikexambd;
 
 import android.app.Application;
 import com.facebook.react.PackageList;

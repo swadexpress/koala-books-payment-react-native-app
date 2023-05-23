@@ -1,4 +1,4 @@
-package com.eps;
+package com.epstopikexambd.epstopikexambd;
 
 import com.facebook.react.ReactActivity;
 import com.facebook.react.ReactActivityDelegate;
@@ -14,7 +14,7 @@ public class MainActivity extends ReactActivity {
    */
   @Override
   protected String getMainComponentName() {
-    return "Eps";
+    return "Eps Topik Exam BD";
   }
 
   /**
