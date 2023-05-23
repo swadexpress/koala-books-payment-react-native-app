@@ -1,4 +1,4 @@
-package com.epstopikexambd.epstopikexambd;
+package com.koalabooks.koalabooks;
 
 import android.app.Application;
 import com.facebook.react.PackageList;

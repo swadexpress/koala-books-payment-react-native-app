@@ -93,9 +93,9 @@ android {
 
     compileSdkVersion rootProject.ext.compileSdkVersion
 
-    namespace "com.epstopikexambd.epstopikexambd"
+    namespace "com.koalabooks.koalabooks"
     defaultConfig {
-        applicationId "com.epstopikexambd.epstopikexambd"
+        applicationId "com.koalabooks.koalabooks"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1

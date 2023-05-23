@@ -1,4 +1,4 @@
-package com.epstopikexambd.epstopikexambd;
+package com.koalabooks.koalabooks;
 
 import com.facebook.react.ReactActivity;
 import com.facebook.react.ReactActivityDelegate;
@@ -14,7 +14,7 @@ public class MainActivity extends ReactActivity {
    */
   @Override
   protected String getMainComponentName() {
-    return "Eps Topik Exam BD";
+    return "Koala Books";
   }
 
   /**
