@@ -7,7 +7,7 @@ import {COLORS} from '../constants';
 
 const AppStatusBar = () => {
   return (
-    <View style={{backgroundColor: COLORS.white}}>
+    <View style={[styles.statusBar]}>
       <StatusBar
         animated={true}
         barStyle={'dark-content'}
@@ -23,7 +23,11 @@ const BAR_HEIGHT = StatusBar.currentHeight;
 const styles = StyleSheet.create({
   statusBar: {
     height: BAR_HEIGHT,
+    backgroundColor: COLORS.white
   },
+
+
+
 });
 
 export default AppStatusBar;

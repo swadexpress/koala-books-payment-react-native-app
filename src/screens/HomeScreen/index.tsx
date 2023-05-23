@@ -5,8 +5,12 @@ import {useDispatch, useSelector} from 'react-redux';
 import {COLORS, SIZES, icons, images} from '../../constants';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import {
+  Alert,
   AppState,
+  Button,
+  FlatList,
   Image,
+  ImageBackground,
   ScrollView,
   Text,
   TouchableOpacity,
@@ -14,175 +18,239 @@ import {
 } from 'react-native';
 import FromInput from './FromInput';
 import AppStatusBar from '../AppStatusBar';
-import {loadAllQuestions} from '../../stores/actions/productActions';
-// import { ScrollView } from 'react-native-gesture-handler';
+import Header from '../../components/Header/Index';
+import {Drawer} from 'react-native-drawer-layout';
+import CustomDrawerScreen from '../CustomDrawerScreen';
+import AuthLayout from '../CustomDrawerScreen/AuthLayout';
+import {loadDrawerOpenAndClose} from '../../stores/actions/productActions';
 
-// import AppStatusBar from '../../AppStatusBar';
+const data = [
+  {
+    name: 'Asusmalilder',
+    image: images.Pimage,
+    id: 1,
+  },
+  {
+    name: 'Asusmalilder',
+    image: images.Pimage2,
+    id: 2,
+  },
+
+  {
+    name: 'Asusmalilder',
+    image: images.Pimage3,
+    id: 3,
+  },
+  {
+    name: 'Asusmalilder',
+    image: icons.profile2,
+    id: 3,
+    isPaid: true,
+  },
+];
 
 const Home = () => {
   const navigation = useNavigation();
-  const {userProfile, myRoomsData} = useSelector((state: any) => state.product);
+  const {userProfile, isDrawerOpenAndClose} = useSelector(
+    (state: any) => state.product,
+  );
   const [fullName, setFullName] = useState<any>();
   const [phoneNumber, setPhoneNumber] = useState<any>();
   const appState = useRef(AppState.currentState);
+  const [open, setOpen] = React.useState(false);
 
   const dispatch = useDispatch();
-  async function onHandelChangeScreen() {
-    navigation.navigate('ChooseExamScreen', {
-      fullName: fullName,
-      phoneNumber: phoneNumber,
-    });
-  }
-
   useEffect(() => {
-    const subscription = AppState.addEventListener('change', nextAppState => {
-      if (
-        appState.current.match(/inactive|background/) &&
-        nextAppState === 'active'
-      ) {
-        console.log('App has come to the foreground!');
-        dispatch(loadAllQuestions());
-      }
+    dispatch(loadDrawerOpenAndClose(false));
+  }, [0]);
 
-      appState.current = nextAppState;
-    });
-
-    return () => subscription.remove();
-  }, []);
-
-  useEffect(() => {
-    dispatch(loadAllQuestions());
-  }, []);
-
+  console.log(isDrawerOpenAndClose, 'isDrawerOpenAndCloseZ');
   return (
     <>
-      <AppStatusBar />
+      <Header />
 
-      <View
-        style={{
-          flex: 1,
-          justifyContent: 'center',
-          alignItems: 'center',
-          backgroundColor: COLORS.white,
+      <Drawer
+      drawerStyle ={{
+        width:SIZES.width *0.88
+      }}
+      drawerPosition={"right"}
+        open={isDrawerOpenAndClose ? isDrawerOpenAndClose : false}
+        onOpen={() => {
+          setOpen(true);
+        }}
+        onClose={() => {
+          // dispatch(loadDrawerOpenAndClose(false))
+        }}
+        renderDrawerContent={() => {
+          return (
+            <>
+              <CustomDrawerScreen />
+            </>
+          );
         }}>
-        <Image
-          source={images.profile}
-          resizeMode="contain"
+        <ImageBackground
+          source={images.bgImage1}
           style={{
-            width: SIZES.width * 0.35,
-            height: SIZES.width * 0.35,
-            marginTop: '-20%',
-            // tintColor: COLORS.black,
-            // opacity: 0.7,
-          }}
-        />
-
-        <FromInput
-          // label="Email"
-          keyboardType="email-address"
-          autoCompleteType="email"
-          placeholder="Full Name"
-          value={fullName}
-          onChange={(value: any) => {
-            // utils.validateEmail(value,setEmailError)
-            // console.log(value)
-            setFullName(value);
-          }}
-          // errorMsg={emailError}
-          appendComponent={null}
-          containerStyle={{width: SIZES.width * 0.9}}
-          inputStyle={{
-            color: COLORS.gray90,
-            fontWeight: '600',
-          }}
-          prependComponent={
-            <View style={{justifyContent: 'center'}}>
-              <Image
-                source={icons.profile}
+            width: '100%',
+            height: '100%',
+            backgroundColor: COLORS.white,
+          }}>
+          <ScrollView showsVerticalScrollIndicator={false}>
+            <View
+              style={{
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}>
+              <View
                 style={{
-                  width: 22,
-                  height: 22,
-                  tintColor: COLORS.primary,
-                  marginRight: 10,
+                  backgroundColor: COLORS.orange,
+                  marginTop: 5,
+                  borderBottomRightRadius: 50,
+                  borderBottomLeftRadius: 50,
+                  marginBottom: 15,
+                }}>
+                <Image
+                  source={images.image2}
+                  resizeMode="contain"
+                  style={{
+                    width: SIZES.width,
+                    height: SIZES.width * 0.6,
+                    borderBottomRightRadius: 50,
+                    borderBottomLeftRadius: 50,
+                    // marginTop:7
+
+                    // tintColor: COLORS.black,
+                    // opacity: 0.7,
+                  }}
+                />
+                <View
+                  style={{
+                    position: 'absolute',
+                    left: 0,
+                    right: 0,
+                    top: 30,
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                  }}>
+                  <Text
+                    style={{
+                      color: COLORS.gray20,
+                      fontSize: 14,
+                      fontWeight: '600',
+                      marginHorizontal: 20,
+                    }}>
+                    Man darf nicht verlenen, die Welt mit den Auggen eines
+                    Kindes zu sehen.
+                  </Text>
+                  <Text
+                    style={{
+                      color: COLORS.gray20,
+                      fontSize: 14,
+
+                      fontWeight: '600',
+                    }}>
+                    - Henry Matisse
+                  </Text>
+                </View>
+                <Text
+                  style={{
+                    fontSize: 16,
+                    fontWeight: 'bold',
+                    color: COLORS.gray10,
+                    marginTop: 5,
+                    marginBottom: 14,
+                    textAlign: 'center',
+                    marginHorizontal: 15,
+                  }}>
+                  wir wunschen euch vaiel SpaB beim lesen, geschinchten horen
+                  und Malen
+                </Text>
+              </View>
+            </View>
+
+            <View
+              style={{
+                marginBottom: 90,
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}>
+              <FlatList
+                data={data}
+                scrollEnabled={false}
+                showsVerticalScrollIndicator={false}
+                keyExtractor={item => `PopularCourses-${item.id}`}
+                showsHorizontalScrollIndicator={false}
+                contentContainerStyle={{
+                  justifyContent: 'center',
+                  flexDirection: 'column',
+                  marginTop: -10,
                 }}
+                numColumns={2}
+                renderItem={({item}) => (
+                  <>
+                    <TouchableOpacity
+                      onPress={() => {
+                        if (item?.isPaid) {
+                          navigation.navigate('SubscriptionScreen');
+                        } else {
+                          navigation.navigate('ProductListScreen');
+                        }
+                      }}>
+                      <View
+                        style={{
+                          width: SIZES.width * 0.35,
+                          height: SIZES.width * 0.35,
+                          borderRadius: 20,
+                          marginHorizontal: 15,
+                          marginTop: 20,
+                          alignItems: 'center',
+                          backgroundColor: COLORS.gray30,
+                          justifyContent: 'center',
+                        }}>
+                        <Image
+                          source={item.image}
+                          style={{
+                            width: item?.isPaid
+                              ? SIZES.width * 0.25
+                              : SIZES.width * 0.35,
+                            height: item?.isPaid
+                              ? SIZES.width * 0.25
+                              : SIZES.width * 0.35,
+                            borderRadius: 20,
+                          }}
+                        />
+                        <View
+                          style={{
+                            position: 'absolute',
+                            bottom: 0,
+                            backgroundColor: COLORS.gray30,
+                            left: 0,
+                            right: 0,
+                            alignItems: 'center',
+                            borderBottomRightRadius: 20,
+                            borderBottomLeftRadius: 20,
+                          }}>
+                          <Text
+                            style={{
+                              fontSize: 13,
+                              fontWeight: '700',
+                              color: COLORS.white,
+                              marginTop: 2,
+                              marginBottom: 3,
+                            }}>
+                            {item.name}
+                          </Text>
+                        </View>
+                      </View>
+                    </TouchableOpacity>
+                  </>
+                )}
+                // ItemSeparatorComponent={() => <LineDivider />}
               />
             </View>
-          }
-          secureTextEntry={undefined}
-          maxLength={undefined}
-          height={undefined}
-          inputContentStyle={{
-            backgroundColor: COLORS.white,
-            borderRadius: 0,
-            // elevation: 5,
-            borderBottomWidth: 1,
-            borderColor: COLORS.gray10,
-          }}
-          label={undefined}
-        />
-
-        <FromInput
-          // label="Email"
-          keyboardType="numeric"
-          autoCompleteType="email"
-          placeholder="Mobile no."
-          value={phoneNumber}
-          onChange={(value: any) => {
-            // utils.validateEmail(value,setEmailError)
-            // console.log(value)
-            setPhoneNumber(value);
-          }}
-          // errorMsg={emailError}
-          appendComponent={null}
-          containerStyle={{width: SIZES.width * 0.9}}
-          inputStyle={{
-            color: COLORS.gray90,
-            fontWeight: '600',
-          }}
-          prependComponent={
-            <View style={{justifyContent: 'center'}}>
-              <Image
-                source={icons.call}
-                style={{
-                  width: 22,
-                  height: 22,
-                  tintColor: COLORS.primary,
-                  marginRight: 10,
-                }}
-              />
-            </View>
-          }
-          secureTextEntry={undefined}
-          maxLength={undefined}
-          height={undefined}
-          inputContentStyle={{
-            backgroundColor: COLORS.white,
-            borderRadius: 0,
-            // elevation: 5,
-            borderBottomWidth: 1,
-            borderColor: COLORS.gray10,
-          }}
-          label={undefined}
-        />
-
-        <TouchableOpacity
-          style={{marginTop: 30}}
-          onPress={onHandelChangeScreen}>
-          <View
-            style={{
-              backgroundColor: COLORS.primary,
-              height: 40,
-              width: SIZES.width * 0.8,
-              alignItems: 'center',
-              justifyContent: 'center',
-              borderRadius: 5,
-            }}>
-            <Text style={{fontWeight: 'bold', color: COLORS.white}}>
-              Sign In
-            </Text>
-          </View>
-        </TouchableOpacity>
-      </View>
+          </ScrollView>
+        </ImageBackground>
+      </Drawer>
     </>
   );
 };

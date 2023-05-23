@@ -9,17 +9,14 @@ import {Provider} from 'react-redux';
 import thunk from 'redux-thunk';
 import 'react-native-gesture-handler';
 import {COLORS} from './src/constants';
-import Home from './src/screens/HomeScreen';
 import HomeScreen from './src/screens/HomeScreen';
 import rootReducer from './src/stores/rootReducer';
-import AllQuestionScreen from './src/screens/AllQuestionScreen';
-import ChooseExamScreen from './src/screens/ChooseExamScreen';
-import ExamineersInformationScreen from './src/screens/ExamineersInformationScreen';
-import QuestionDetailsScreen from './src/screens/QuestionDetailsScreen';
-import QuestionDetailScreen from './src/screens/QuestionDetailsScreen';
-import ExamDoneScreen from './src/screens/AnswerSheetScreen';
-import ShowResultScreen from './src/screens/ShowResultScreen';
-import AnswerSheetScreen from './src/screens/AnswerSheetScreen';
+import LogInScreen from './src/screens/LogInScreen';
+import SubscriptionScreen from './src/screens/SubscriptionScreen';
+import ProductListScreen from './src/screens/ProductListScreen';
+import ProductDetailsScreen from './src/screens/ProductDetailsScreen';
+import DrawerNav1 from './src/screens/drawer/drawer1/DrawerNav1';
+import RegistrationScreen from './src/screens/RegistrationScreen';
 const Stack = createSharedElementStackNavigator();
 
 // const store = createStore(themeReducer, applyMiddleware(thunk));
@@ -47,43 +44,37 @@ const App = () => {
               //   // useNativeDriver: true,
               headerShown: false,
             }}
-            initialRouteName={'HomeScreen'}
+            initialRouteName={'RegistrationScreen'}
             detachInactiveScreens={false}>
             <Stack.Screen
               name="HomeScreen"
               component={HomeScreen}
               options={{headerShown: false}}
             />
-
             <Stack.Screen
-              name="AllQuestionScreen"
-              component={AllQuestionScreen}
+              name="RegistrationScreen"
+              component={RegistrationScreen}
               options={{headerShown: false}}
             />
 
             <Stack.Screen
-              name="ChooseExamScreen"
-              component={ChooseExamScreen}
+              name="LogInScreen"
+              component={LogInScreen}
               options={{headerShown: false}}
             />
             <Stack.Screen
-              name="ExamineersInformationScreen"
-              component={ExamineersInformationScreen}
+              name="SubscriptionScreen"
+              component={SubscriptionScreen}
               options={{headerShown: false}}
             />
             <Stack.Screen
-              name="QuestionDetailsScreen"
-              component={QuestionDetailsScreen}
+              name="ProductListScreen"
+              component={ProductListScreen}
               options={{headerShown: false}}
             />
             <Stack.Screen
-              name="AnswerSheetScreen"
-              component={AnswerSheetScreen}
-              options={{headerShown: false}}
-            />
-            <Stack.Screen
-              name="ShowResultScreen"
-              component={ShowResultScreen}
+              name="ProductDetailsScreen"
+              component={ProductDetailsScreen}
               options={{headerShown: false}}
             />
           </Stack.Navigator>
