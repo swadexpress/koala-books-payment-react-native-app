@@ -67,14 +67,45 @@ const Home = () => {
               justifyContent: 'center',
               marginTop: StatusBar.currentHeight + 15,
             }}>
-            <Text
+            <View
               style={{
-                fontSize: 20,
-                fontWeight: '800',
-                color: COLORS.white,
+                justifyContent: 'center',
               }}>
-              Registrieren
-            </Text>
+              <Image
+                source={images.top_banner_image}
+                style={{
+                  width: SIZES.width * 0.25,
+                  height: SIZES.width * 0.25,
+                  borderRadius: 100,
+                  borderWidth: 2,
+                  borderColor: COLORS.white,
+                  // tintColor: COLORS.primary,
+                }}
+              />
+
+              <View
+                style={{
+                  width: 30,
+                  height: 30,
+                  borderRadius: 50,
+                  borderWidth: 1,
+                  borderColor: COLORS.white,
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  backgroundColor: COLORS.primary,
+                  position: 'absolute',
+                  right: -5,
+                  bottom: 10,
+                }}>
+                <Image
+                  source={icons.checked}
+                  style={{
+                    width: 10,
+                    height: 15,
+                  }}
+                />
+              </View>
+            </View>
           </View>
 
           <View
@@ -383,179 +414,18 @@ const Home = () => {
                     borderColor: '#EEE7DF',
                   }}
                 />
-                {/* ============================================================ */}
-
-                <FromInput
-                  label="Passwort wiederholen"
-                  keyboardType="email-address"
-                  autoCompleteType="email"
-                  placeholder="******"
-                  value={fullName}
-                  onChange={(value: any) => {
-                    // utils.validateEmail(value,setEmailError)
-                    // console.log(value)
-                    setFullName(value);
-                  }}
-                  // errorMsg={emailError}
-                  appendComponent={
-                    <View
-                      style={{
-                        justifyContent: 'center',
-                      }}>
-                      <Image
-                        source={icons.eye}
-                        style={{
-                          width: 20,
-                          height: 20,
-                          tintColor: COLORS.primary,
-                        }}
-                      />
-                    </View>
-                  }
-                  containerStyle={{width: SIZES.width * 0.95}}
-                  inputStyle={{
-                    color: COLORS.gray90,
-                    fontWeight: '800',
-                    fontSize: 15,
-                  }}
-                  prependComponent={null}
-                  secureTextEntry={true}
-                  maxLength={undefined}
-                  height={undefined}
-                  inputContentStyle={{
-                    backgroundColor: COLORS.white,
-                    borderRadius: 10,
-                    borderWidth: 0.8,
-                    borderColor: '#EEE7DF',
-                  }}
-                />
               </View>
 
               <View
                 style={{
                   // alignItems: 'center',
-                  marginTop: 15,
+                  marginTop: '25%',
                   marginHorizontal: 10,
                   marginBottom: 50,
                 }}>
-                <View
-                  style={{
-                    alignItems: 'center',
-                    flexDirection: 'row',
-                  }}>
-                  <View
-                    style={{
-                      alignItems: 'center',
-
-                      justifyContent: 'center',
-                      borderWidth: 1,
-                      borderColor: '#C9C1DB',
-                      height: 22,
-                      width: 22,
-                      borderRadius: 5,
-                    }}>
-                    <Image
-                      source={icons.checked}
-                      style={{
-                        width: 15,
-                        height: 15,
-                        tintColor: COLORS.white,
-                      }}
-                    />
-                  </View>
-                  <View style={{flexDirection: 'row'}}>
-                    <Text
-                      style={{
-                        fontSize: 13,
-                        fontWeight: '600',
-                        color: '#8793AB',
-                        marginLeft: 10,
-                      }}>
-                      Ich stimme den
-                    </Text>
-
-                    <Text
-                      style={{
-                        fontSize: 13,
-                        fontWeight: '600',
-                        color: COLORS.black,
-                        marginLeft: 3,
-                      }}>
-                      AGB
-                    </Text>
-                    <Text
-                      style={{
-                        fontSize: 13,
-                        fontWeight: '600',
-                        color: '#8793AB',
-                        marginLeft: 3,
-                      }}>
-                      &
-                    </Text>
-                    <Text
-                      style={{
-                        fontSize: 13,
-                        fontWeight: '600',
-                        color: COLORS.black,
-                        marginLeft: 3,
-                      }}>
-                      DSGVO
-                    </Text>
-                    <Text
-                      style={{
-                        fontSize: 13,
-                        fontWeight: '600',
-                        color: '#8793AB',
-                        marginLeft: 3,
-                      }}>
-                      zu
-                    </Text>
-                  </View>
-                </View>
-
-                <View
-                  style={{
-                    alignItems: 'center',
-                    flexDirection: 'row',
-                    marginTop: 10,
-                    marginBottom: 20,
-                  }}>
-                  <View
-                    style={{
-                      alignItems: 'center',
-
-                      justifyContent: 'center',
-                      borderWidth: 1,
-                      borderColor: '#C9C1DB',
-                      height: 22,
-                      width: 22,
-                      borderRadius: 5,
-                    }}>
-                    <Image
-                      source={icons.checked}
-                      style={{
-                        width: 15,
-                        height: 15,
-                        tintColor: COLORS.white,
-                      }}
-                    />
-                  </View>
-                  <View style={{flexDirection: 'row'}}>
-                    <Text
-                      style={{
-                        fontSize: 13,
-                        fontWeight: '600',
-                        color: '#8793AB',
-                        marginLeft: 10,
-                      }}>
-                      Updates und Info per Email
-                    </Text>
-                  </View>
-                </View>
-
                 <TouchableOpacity
                   onPress={() => {
-                    navigation.navigate('FillYourProfileScreen');
+                    navigation.navigate('HomeScreen');
                   }}>
                   <View
                     style={{

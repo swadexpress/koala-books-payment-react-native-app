@@ -23,7 +23,7 @@ const BAR_HEIGHT = StatusBar.currentHeight;
 const styles = StyleSheet.create({
   statusBar: {
     height: BAR_HEIGHT,
-    backgroundColor: COLORS.white
+    // backgroundColor: COLORS.white
   },
 
 

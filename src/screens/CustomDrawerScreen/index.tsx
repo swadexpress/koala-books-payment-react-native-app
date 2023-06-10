@@ -14,13 +14,14 @@ import {
   ImageBackground,
   LayoutAnimation,
   ScrollView,
+  StatusBar,
   Text,
   TouchableOpacity,
   View,
 } from 'react-native';
 import FromInput from './FromInput';
 import AppStatusBar from '../AppStatusBar';
-import Header from '../../components/Header/Index';
+import Header from '../../components/DrawerHeader/Index';
 import {Drawer} from 'react-native-drawer-layout';
 import CustomDrawerScreen from '../CustomDrawerScreen';
 import SubscriptionScreen from '../SubscriptionScreen';
@@ -145,7 +146,14 @@ const Home = () => {
             overflow: 'hidden',
             marginBottom: 15,
           }}>
-          <View style={{alignItems: 'center', justifyContent: 'center'}}>
+          <View
+            style={{
+              alignItems: 'center',
+              justifyContent: 'center',
+              position: 'absolute',
+              left: 0,
+              right: 0,
+            }}>
             <Image
               source={images.profile}
               resizeMode="contain"
@@ -157,7 +165,7 @@ const Home = () => {
             />
             <Text
               style={{
-                fontSize: 20,
+                fontSize: SIZES.width * 0.05,
                 fontWeight: '700',
                 color: COLORS.white,
                 marginTop: 10,
@@ -179,7 +187,7 @@ const Home = () => {
             style={{
               // alignItems: 'center',
               // justifyContent: 'center',
-              marginTop: 60,
+              marginTop: SIZES.height * 0.21 + StatusBar.currentHeight,
               marginLeft: SIZES.width * 0.18,
             }}>
             {data?.map((item: any, index: number) => {
@@ -189,6 +197,15 @@ const Home = () => {
                     onPress={() => {
                       if (item.name == 'Einstellungen') {
                         changeLayout();
+                      } else if (item.name == 'Abo wechsel / Upgrade') {
+                        setExpanded(false);
+                        dispatch(loadDrawerOpenAndClose(false));
+
+                        navigation.navigate('SubscriptionScreen');
+                      } else if (item.name == 'Startseite') {
+                        setExpanded(false);
+                        dispatch(loadDrawerOpenAndClose(false));
+                        navigation.navigate('HomeScreen');
                       }
                     }}>
                     <View
@@ -239,7 +256,7 @@ const Home = () => {
         {/* ==============================Profile Update========================= */}
         <View
           style={{
-            height: expanded ? null :0 ,
+            height: expanded ? null : 0,
             overflow: 'hidden',
             marginBottom: 15,
             flex: expanded ? 1 : 0,
@@ -529,7 +546,7 @@ const Home = () => {
             right: 0,
             alignItems: 'center',
             justifyContent: 'center',
-            display: expanded ?  'flex':'none' ,
+            display: expanded ? 'flex' : 'none',
           }}>
           <TouchableOpacity
             onPress={() => {

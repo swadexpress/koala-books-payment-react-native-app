@@ -17,7 +17,7 @@ import {
 } from 'react-native';
 import FromInput from './FromInput';
 import AppStatusBar from '../AppStatusBar';
-import Header from '../../components/Header/Index';
+import Header from '../../components/DrawerHeader/Index';
 import CustomDrawerScreen from '../CustomDrawerScreen';
 import {Drawer} from 'react-native-drawer-layout';
 

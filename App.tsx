@@ -17,6 +17,10 @@ import ProductListScreen from './src/screens/ProductListScreen';
 import ProductDetailsScreen from './src/screens/ProductDetailsScreen';
 import DrawerNav1 from './src/screens/drawer/drawer1/DrawerNav1';
 import RegistrationScreen from './src/screens/RegistrationScreen';
+import SketchCanvasScreen from './src/screens/SketchCanvasScreen';
+import BottomNavigator from './src/navigation/BottomNavigator';
+import HorgeschichtenDetailsScreen from './src/screens/HorgeschichtenDetailsScreen';
+import FillYourProfileScreen from './src/screens/FillYourProfileScreen';
 const Stack = createSharedElementStackNavigator();
 
 // const store = createStore(themeReducer, applyMiddleware(thunk));
@@ -44,11 +48,31 @@ const App = () => {
               //   // useNativeDriver: true,
               headerShown: false,
             }}
-            initialRouteName={'RegistrationScreen'}
+            initialRouteName={'HomeScreen'}
             detachInactiveScreens={false}>
+              
             <Stack.Screen
               name="HomeScreen"
-              component={HomeScreen}
+              component={BottomNavigator}
+              options={{headerShown: false}}
+            />
+
+            <Stack.Screen
+              name="HorgeschichtenDetailsScreen"
+              component={HorgeschichtenDetailsScreen}
+              options={{headerShown: false}}
+            />
+
+            <Stack.Screen
+              name="FillYourProfileScreen"
+              component={FillYourProfileScreen}
+              options={{headerShown: false}}
+            />
+
+
+            <Stack.Screen
+              name="SketchCanvasScreen"
+              component={SketchCanvasScreen}
               options={{headerShown: false}}
             />
             <Stack.Screen
@@ -67,16 +91,7 @@ const App = () => {
               component={SubscriptionScreen}
               options={{headerShown: false}}
             />
-            <Stack.Screen
-              name="ProductListScreen"
-              component={ProductListScreen}
-              options={{headerShown: false}}
-            />
-            <Stack.Screen
-              name="ProductDetailsScreen"
-              component={ProductDetailsScreen}
-              options={{headerShown: false}}
-            />
+     
           </Stack.Navigator>
         </NavigationContainer>
       </Provider>

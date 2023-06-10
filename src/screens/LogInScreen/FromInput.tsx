@@ -21,9 +21,19 @@ const FromInput = ({
   maxLength,
   height,
   inputContentStyle,
-}:any) => {
+}: any) => {
   return (
-    <View style={{...containerStyle, marginTop: 5}}>
+    <View style={{...containerStyle, marginTop: 15}}>
+      <View
+        style={{
+          flexDirection: 'row',
+          justifyContent: 'space-between',
+        }}>
+        <Text style={{color: COLORS.black, fontWeight: '700',marginLeft:5}}>{label}</Text>
+
+        <Text style={{color: COLORS.darkRed, fontWeight: '700'}}>{errorMsg}</Text>
+      </View>
+
       <View
         style={{
           flexDirection: 'row',
