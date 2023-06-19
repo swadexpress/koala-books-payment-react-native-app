@@ -24,6 +24,7 @@ import CustomDrawerScreen from '../CustomDrawerScreen';
 import AuthLayout from '../CustomDrawerScreen/AuthLayout';
 import {loadDrawerOpenAndClose} from '../../stores/actions/productActions';
 import DrawerHeader from '../../components/DrawerHeader/Index';
+import WebView from 'react-native-webview';
 
 const data = [
   {
@@ -72,7 +73,9 @@ const Home = () => {
   console.log(isDrawerOpenAndClose, 'isDrawerOpenAndCloseZ');
   return (
     <>
-      <Drawer
+      <WebView source={{uri: 'http://192.168.0.207:3000/'}} style={{flex: 1}} />
+
+      {/* <Drawer
         drawerStyle={{
           width: SIZES.width * 0.88,
         }}
@@ -181,10 +184,19 @@ const Home = () => {
                         if (item?.isPaid) {
                           navigation.navigate('LogInScreen');
                         } else {
-                          navigation.navigate('HorgeschichtenDetailsScreen', {
-                            id: 1,
-                            isAudio: false,
-                          });
+                          if (item?.name == 'Asusmalilder') {
+                            navigation.navigate('ProductListScreen');
+                          } else if (item?.name == 'Kinderbucher') {
+                            navigation.navigate('ProductDetailsScreen', {
+                              id: 1,
+                              isAudio: true,
+                            });
+                          } else if (item?.name == 'horbucher') {
+                            navigation.navigate('ProductDetailsScreen', {
+                              id: 1,
+                              isAudio: false,
+                            });
+                          }
                         }
                       }}>
                       <ImageBackground
@@ -224,7 +236,7 @@ const Home = () => {
             </View>
           </ScrollView>
         </ImageBackground>
-      </Drawer>
+      </Drawer> */}
     </>
   );
 };

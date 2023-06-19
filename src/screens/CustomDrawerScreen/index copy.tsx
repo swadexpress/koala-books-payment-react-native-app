@@ -120,10 +120,52 @@ const Home = () => {
           right: 0,
         }}
         blurType="light"
-        blurAmount={8}
+        blurAmount={2}
         reducedTransparencyFallbackColor="white"
       />
-    <Text
+
+      <View
+        style={{
+          alignItems: 'flex-end',
+          marginTop: StatusBar.currentHeight + 10,
+          marginRight: 20,
+        }}>
+        <TouchableOpacity
+          onPress={() => {
+            setExpanded(false);
+            dispatch(loadDrawerOpenAndClose(false));
+          }}>
+          <Image
+            source={icons.cross}
+            resizeMode="contain"
+            style={{
+              width: 20,
+              height: 20,
+              tintColor: COLORS.primary,
+            }}
+          />
+        </TouchableOpacity>
+      </View>
+
+      <View style={{}}>
+        <View
+          style={{
+            alignItems: 'center',
+            justifyContent: 'center',
+            position: 'absolute',
+            left: 0,
+            right: 0,
+          }}>
+          <Image
+            source={images.top_banner_image}
+            resizeMode="contain"
+            style={{
+              width: SIZES.width * 0.25,
+              height: SIZES.width * 0.25,
+              borderRadius: 50,
+            }}
+          />
+          <Text
             style={{
               fontSize: SIZES.width * 0.05,
               fontWeight: '700',
@@ -132,9 +174,64 @@ const Home = () => {
             }}>
             Dolly Buster
           </Text>
+          <Text
+            style={{
+              fontSize: 10,
+              fontWeight: '500',
+              color: COLORS.black,
+              marginTop: 3,
+            }}>
+            Abonament: Premium bis 5/3045
+          </Text>
+        </View>
 
-
-      
+        <View
+          style={{
+            // alignItems: 'center',
+            // justifyContent: 'center',
+            marginTop: SIZES.height * 0.21 + StatusBar.currentHeight,
+            marginLeft: SIZES.width * 0.18,
+          }}>
+          {data?.map((item: any, index: number) => {
+            return (
+              <>
+                <TouchableOpacity
+                  onPress={() => {
+                    setExpanded(false);
+                    dispatch(loadDrawerOpenAndClose(false));
+                    navigation.navigate(item.screen);
+                  }}>
+                  <View
+                    style={{
+                      flexDirection: 'row',
+                      marginTop: 20,
+                      alignItems: 'center',
+                    }}>
+                    <Image
+                      source={item.image}
+                      resizeMode="contain"
+                      style={{
+                        width: 22,
+                        height: 22,
+                        tintColor: COLORS.black,
+                      }}
+                    />
+                    <Text
+                      style={{
+                        fontSize: 15,
+                        fontWeight: '500',
+                        color: COLORS.black,
+                        marginLeft: 8,
+                      }}>
+                      {item.name}
+                    </Text>
+                  </View>
+                </TouchableOpacity>
+              </>
+            );
+          })}
+        </View>
+      </View>
     </>
   );
 };

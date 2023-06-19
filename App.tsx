@@ -21,6 +21,8 @@ import SketchCanvasScreen from './src/screens/SketchCanvasScreen';
 import BottomNavigator from './src/navigation/BottomNavigator';
 import HorgeschichtenDetailsScreen from './src/screens/HorgeschichtenDetailsScreen';
 import FillYourProfileScreen from './src/screens/FillYourProfileScreen';
+import UnsereAboAngeboteScreen from './src/screens/UnsereAboAngeboteScreen';
+import Impressum from './src/screens/Impressum';
 const Stack = createSharedElementStackNavigator();
 
 // const store = createStore(themeReducer, applyMiddleware(thunk));
@@ -48,12 +50,22 @@ const App = () => {
               //   // useNativeDriver: true,
               headerShown: false,
             }}
-            initialRouteName={'HomeScreen'}
+            initialRouteName={'Impressum'}
             detachInactiveScreens={false}>
               
             <Stack.Screen
               name="HomeScreen"
               component={BottomNavigator}
+              options={{headerShown: false}}
+            />
+            <Stack.Screen
+              name="UnsereAboAngeboteScreen"
+              component={UnsereAboAngeboteScreen}
+              options={{headerShown: false}}
+            />
+            <Stack.Screen
+              name="Impressum"
+              component={Impressum}
               options={{headerShown: false}}
             />
 

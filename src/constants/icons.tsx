@@ -17,10 +17,14 @@ const bildergeschichten = require('../assets/icons/bildergeschichten.png');
 const eye_close = require('../assets/icons/eye_close.png');
 const eye = require('../assets/icons/eye.png');
 const checked = require('../assets/icons/checked.png');
+const aboAngeboteY = require('../assets/icons/aboAngeboteY.png');
+const aboAngeboteR = require('../assets/icons/aboAngeboteR.png');
 
 export default {
   play,
   eye,
+  aboAngeboteY,
+  aboAngeboteR,
   checked,
   eye_close,
   setting,

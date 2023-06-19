@@ -93,7 +93,7 @@ const DrawerHeader = () => {
           style={{
             fontSize: 20,
             fontWeight: 'bold',
-            color: COLORS.white,
+            color: COLORS.black,
             marginLeft: SIZES.width * 0.31,
           }}>
           Home
