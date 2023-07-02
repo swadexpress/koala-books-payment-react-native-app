@@ -19,10 +19,12 @@ const eye = require('../assets/icons/eye.png');
 const checked = require('../assets/icons/checked.png');
 const aboAngeboteY = require('../assets/icons/aboAngeboteY.png');
 const aboAngeboteR = require('../assets/icons/aboAngeboteR.png');
+const downAr = require('../assets/icons/downAr.png');
 
 export default {
   play,
   eye,
+  downAr,
   aboAngeboteY,
   aboAngeboteR,
   checked,
