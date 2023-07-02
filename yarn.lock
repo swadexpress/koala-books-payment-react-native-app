@@ -5963,8 +5963,7 @@ pirates@^4.0.4, pirates@^4.0.5:
 
 "pixobe-coloring-book@file:pixobe-coloring-book-6.0.8.tgz":
   version "6.0.8"
-  resolved "file:pixobe-coloring-book-6.0.8.tgz"
-  integrity sha512-3tgnN9OV71jxUjRBAJ4J/GHt7ai6fx88omL2dIsGksBLHDj9yGnNWVgUPuglO6N3Zel2UjXjGNMDSvK5glHUaw==
+  resolved "file:pixobe-coloring-book-6.0.8.tgz#401772d44e534b43303fbfe01de5fd8682882ca4"
 
 pkg-dir@^3.0.0:
   version "3.0.0"
